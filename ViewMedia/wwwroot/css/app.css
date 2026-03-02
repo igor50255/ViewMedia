@@ -1,0 +1,27 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  /* ❗ запрет скролла страницы */
+}
+
+.app {
+  height: 100vh;
+  /* вся высота окна */
+  display: flex;
+  flex-direction: column;
+}
+
+/* фиксируем высоту верхней полосы */
+nav {
+  height: 64px !important;
+}
+
+/* чтобы иконка меню (и не только) не "съезжала" по высоте */
+.navbar-fixed nav .nav-wrapper,
+#nameActivSidenavMenu,
+.navbar-fixed nav i.material-icons {
+  height: 64px;
+  line-height: 64px;
+}

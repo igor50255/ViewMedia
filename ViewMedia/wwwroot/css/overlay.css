@@ -1,0 +1,22 @@
+/*--- Прогресс загрузки на всё окно ---*/
+/*--- ОВЕРЛЕЙ ЗАГРУЗКИ ---*/
+#loader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(100,100,100,.35);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    transition: opacity .7s ease, visibility 0s linear 0s;
+}
+
+    #loader-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transition: opacity .7s ease, visibility 0s linear .7s; /* visibility после fade */
+    }

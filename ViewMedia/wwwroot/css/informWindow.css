@@ -1,0 +1,4 @@
+/*--- Перенос строки в информационном окне: INFORMATION ---*/
+#info-modal-text {
+    white-space: pre-line;
+}
