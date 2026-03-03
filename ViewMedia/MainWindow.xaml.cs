@@ -24,6 +24,7 @@ public partial class MainWindow : Window
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        //Properties.Settings.Default.rootFolderPath = "";
         // будет каждый раз просить выбрать начальную папку с контентом
         //Properties.Settings.Default.rootFolder = false;
         //Properties.Settings.Default.Save();
@@ -110,6 +111,15 @@ public partial class MainWindow : Window
                     Properties.Settings.Default.Save();
 
                     Restart.RestartApplication();
+                    break;
+                }
+            case "get-path-content": // получить актуальный путь к папке с контентом
+                {
+                    var pathContent = Properties.Settings.Default.rootFolderPath;
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-content", pathContent = pathContent.ToString() })
+                    );
                     break;
                 }
         }

@@ -35,7 +35,9 @@ nav {
   font-size: 1.1rem;
   font-weight: 600;
 }
-
+#view-window{
+  overflow-y: auto;
+}
 /* ------------------------------------------------------------------------- */
 
 #open-settings {
