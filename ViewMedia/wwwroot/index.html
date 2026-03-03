@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="icon" type="image/png" href="/icon/default.png">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="materialize/css/materialize.min.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/overlay.css">
   <link rel="stylesheet" href="css/left-menu.css">
+  <link rel="stylesheet" href="css/list-files-collapsible.css">
   <title>Просмотр медиа на ПК</title>
 
 </head>
@@ -49,12 +51,37 @@
     <!-- Фиксированная верхняя панель -->
     <div class="navbar-fixed">
       <nav>
-        <div class="nav-wrapper  cyan darken-4">
-          <!-- Меню - гамбургер -->
-          <a href="#" data-target="mobile-menu" class="sidenav-trigger">
-            <i class="material-icons">menu</i>
-          </a>
-          <div id="nameActivSidenavMenu"></div>
+        <div class="nav-wrapper header-flex cyan darken-4">
+          <div class="left-buttons">
+            <!-- Меню - гамбургер -->
+            <a href="#" data-target="mobile-menu" class="sidenav-trigger">
+              <i class="material-icons large">menu</i>
+            </a>
+            <div id="nameActivSidenavMenu"></div>
+          </div>
+          <div class="right-buttons">
+            <ul id="list-files" class="collapsible">
+              <li>
+                <div class="collapsible-header header-coll-flex cyan darken-4 white-text">
+                  <span id="files-count">Genesis 9</span>
+                </div>
+                <div class="collapsible-body">
+                  <div class="collection">
+                    <div class="collection-item">Genesis 9</div>
+                    <div class="collection-item">Genesis 8 - 8.1</div>
+                    <div class="collection-item">Genesis 3</div>
+                    <div class="collection-item">Genesis 2</div>
+                    <div class="collection-item">Victoria 4</div>
+                    <div class="collection-item">Other</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <button id="open-settings" class="btn waves-effect waves-teal cyan darken-4 white-text">
+              <i class="material-icons">settings</i>
+            </button>
+          </div>
+
         </div>
       </nav>
     </div>
@@ -64,6 +91,7 @@
       <li><a href="#home">Главная</a></li>
       <li><a href="#services">Услуги</a></li>
       <li><a href="#contacts">Контакты</a></li>
+      <li><a href="#contacts">Contacts</a></li>
     </ul>
 
     <script>
@@ -77,8 +105,10 @@
     <script src="js/fullscreen.js"></script>
     <script src="js/Initialization.js"></script>
     <script src="js/left-menu.js"></script>
+    <script src="js/list-files-collapsible.js"></script>
+    <script src="js/settings.js"></script>
     <script>
-      
+
     </script>
 </body>
 

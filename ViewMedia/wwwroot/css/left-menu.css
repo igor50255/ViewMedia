@@ -1,18 +1,41 @@
 /* постоянно видимый значёк меню-гамбургер */
-    .sidenav-trigger {
-      display: block !important;
-    }
+.sidenav-trigger {
+  display: block !important;
+}
 
-    /* изменение цвета активной вкладки в меню-гамбургер */
-    .sidenav li.active {
-      background-color: #006064;
-      /* cyan darken-4 */
-    }
+/* изменение цвета активной вкладки в меню-гамбургер */
+.sidenav li.active {
+  background-color: #006064;
+  /* cyan darken-4 */
+}
 
-    .sidenav li.active a {
-      color: #fff;
-    }
-    /* при наведении пункты меню сильнее подсвечиваются (кроме активного) */
-    .sidenav li:not(.active):hover {
-      background-color: rgba(0, 0, 0, 0.15);
-    }
+.sidenav li.active a {
+  color: #fff;
+}
+
+/* при наведении пункты меню сильнее подсвечиваются (кроме активного) */
+.sidenav li:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.sidenav li a {
+  font-size: 1.0rem;
+  color: rgb(61, 61, 61);
+}
+
+/* чтобы иконка меню (и не только) не "съезжала" по высоте */
+#nameActivSidenavMenu,
+.navbar-fixed nav i.material-icons {
+  height: 64px;
+  line-height: 64px;
+}
+
+/* отступы справи и слево у меню-гамбургер */
+.sidenav-trigger {
+  padding-inline: 15px;
+}
+
+/* размер меню-гамбургер */
+.material-icons.large {
+  font-size: 1.8rem;
+}

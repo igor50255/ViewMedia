@@ -13,15 +13,35 @@ body {
   flex-direction: column;
 }
 
+/* расположение элементов управления на шапке программы */
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+}
+
 /* фиксируем высоту верхней полосы */
 nav {
   height: 64px !important;
 }
 
-/* чтобы иконка меню (и не только) не "съезжала" по высоте */
-.navbar-fixed nav .nav-wrapper,
-#nameActivSidenavMenu,
-.navbar-fixed nav i.material-icons {
-  height: 64px;
-  line-height: 64px;
+/* размер шрифта */
+.header-coll-flex,
+#nameActivSidenavMenu {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------------- */
+
+#open-settings {
+  height: 100%;
+  width: 80px;
+  font-size: 1rem;
+  margin: 0;
+  box-shadow: none !important;
 }
