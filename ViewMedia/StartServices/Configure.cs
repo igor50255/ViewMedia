@@ -45,7 +45,17 @@ namespace ViewMedia.StartServices
                 }
                 else
                 {
-                    Application.Current.Shutdown();
+                    // если выбор делается первый раз, то приложение закрывается, если не первый, то возвращается старое значение
+                    folder = Properties.Settings.Default.rootFolderPath;
+                    if (folder != "" && folder != null)
+                    {
+                        Properties.Settings.Default.rootFolder = true;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        Application.Current.Shutdown();
+                    }
                 }
             }
             else
