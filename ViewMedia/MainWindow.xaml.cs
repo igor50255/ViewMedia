@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using ViewMedia.StartServices;
 
 namespace ViewMedia;
@@ -119,6 +120,59 @@ public partial class MainWindow : Window
 
                     Browser.CoreWebView2.PostWebMessageAsJson(
                         System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-content", pathContent = pathContent.ToString() })
+                    );
+                    break;
+                }
+            case "get-path-folders": // получить массив папок при запуске программы
+                {
+                    string[]? directories;
+                    string[]? items;
+
+                    if (!Directory.Exists(rootContent)) 
+                    {
+                        MessageBox.Show("Что-то идёт не так! Корневой папки не существует!");
+                        directories = null;
+                        items = null;
+                    }
+                    else
+                    {
+                        // получаем массив папок в главной директории (только имена)
+                        directories = Directory.GetDirectories(rootContent).Select(System.IO.Path.GetFileName).ToArray()!;
+                        if(directories.Length > 0 )
+                        {
+                            // получаем массив папок в первой папке (только имена)
+                            items = Directory.GetDirectories(Directory.GetDirectories(rootContent)[0]).Select(System.IO.Path.GetFileName).ToArray()!;
+                        }
+                        else items = Array.Empty<string>();
+                    }
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                           System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-folders", pathFolders = directories, pathItems = items })
+                       );
+
+                    break;
+                }
+            case "get-path-second-folders": // получить папки в выбранной папке
+                {
+                    var folder = root.GetProperty("folder").GetString() ?? "";
+
+                    var directoryPath = System.IO.Path.Combine(rootContent, folder);
+
+                    string[]? directories;
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        MessageBox.Show("Что-то идёт не так! Выбранной папки не существует!");
+                        directories = null;
+                    }
+                    else
+                    {
+                        // получаем массив папок в главной директории (только имена)
+                        directories = Directory.GetDirectories(directoryPath).Select(System.IO.Path.GetFileName).ToArray()!;
+                    }
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-second-folders", pathFolders = directories })
                     );
                     break;
                 }

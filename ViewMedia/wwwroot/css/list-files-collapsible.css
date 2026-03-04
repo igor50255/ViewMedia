@@ -15,7 +15,7 @@
   border: 0;
   font-weight: 600;
   height: 64px !important;
-  width: 140px;
+  width: 240px;
 }
 
 /* запретить копирование из выпадающего списка */
@@ -44,4 +44,13 @@
 .collapsible-body {
   margin-top: 2px;
   padding: 0;
+  width: 240px;
+}
+
+/* автоматически обрезает длинный текст и добавляет ... */
+.collection .collection-item,
+#files-count{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

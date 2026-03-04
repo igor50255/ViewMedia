@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
           // 2. Добавляем active к выбранному пункту
           link.parentElement.classList.add('active');
           const nameActivMenu = link.textContent.trim();
-          nameActivMenuSidenav.textContent = nameActivMenu; // именение указателя возле меню-гамбургер
+
+          // 3. именение указателя возле меню-гамбургер
+          nameActivMenuSidenav.textContent = nameActivMenu; 
+          nameActivMenuSidenav.setAttribute("data-tooltip", nameActivMenu);
+          nameActivMenuSidenav.setAttribute("data-position", "right");
+
           console.log('Клик по пункту меню:', nameActivMenu);
 
           // 3. Закрываем меню
