@@ -35,6 +35,15 @@ nav {
   font-size: 1.1rem;
   font-weight: 600;
 }
+/* автоматически обрезает длинный текст и добавляет ... */
+#nameActivSidenavMenu {
+  cursor: default;
+  max-width: 200px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 #view-window{
   overflow-y: auto;
 }
@@ -46,4 +55,14 @@ nav {
   font-size: 1rem;
   margin: 0;
   box-shadow: none !important;
+}
+
+/* всплывающая подсказка */
+.material-tooltip {
+  background-color: #00838f;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 10px 24px 12px 24px;
+  min-height: 0 !important;    /* перебить min-height Materialize */
 }

@@ -39,3 +39,11 @@
 .material-icons.large {
   font-size: 1.8rem;
 }
+
+/* автоматически обрезает длинный текст и добавляет ... */
+#mobile-menu li a {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
