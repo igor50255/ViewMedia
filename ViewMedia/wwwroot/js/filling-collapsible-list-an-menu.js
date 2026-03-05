@@ -1,9 +1,19 @@
 
-function fiilingSelectionFolders(menuItems, folders) {
+function fiilingSelectionFolders(menuItems, folders, nameCreateFolder = false) {
 
   // Заполнение выпадающего списка (справа)
   const collection1 = document.getElementById("files-collection");
   const counter = document.getElementById("files-count");
+
+  // Очистка старых элементов
+  collection1.replaceChildren();
+
+  // Первым элементом идёт "+"
+  const plus = document.createElement("div");
+  plus.className = "collection-item center-align";
+  plus.dataset.action = "add-folder";
+  plus.textContent = "+ Добавить";
+  collection1.appendChild(plus);
 
   // Обновляем заголовок (первый элемент)
   counter.textContent = folders[0];
@@ -23,29 +33,54 @@ function fiilingSelectionFolders(menuItems, folders) {
 
   // Заполнение меню-гамбургер (слева)
   fiilingMenuItems(menuItems);
+
+  // открыть меню-гамбургер
+  if (nameCreateFolder) {
+    // меняем заголовок
+    const collapsibleType = document.querySelector('#list-files');
+    const headerTextType = collapsibleType.querySelector('#files-count');
+    headerTextType.textContent = nameCreateFolder;
+    // открываем меню-гамбургер
+    const menu = document.getElementById('mobile-menu');
+    const instance1 = M.Sidenav.getInstance(menu);
+    instance1.open();
+  }
 }
 
-function fiilingMenuItems(menuItems) {
+function fiilingMenuItems(menuItems, nameCreateFolder = null) {
   // Заполнение меню-гамбургер (слева)
   const menu = document.getElementById("mobile-menu");
 
   // Очистка старых элементов
-    menu.replaceChildren();
+  menu.replaceChildren();
+
+  // Первым элементом идёт "+"
+  const li = document.createElement("li");
+  const a = document.createElement("a");
+  a.href = "#"; // если нужно — можно заменить на реальную ссылку
+  a.dataset.action = "add-folder";
+  a.textContent = "+ Добавить";
+  a.className = "center-align";
+  li.appendChild(a);
+  menu.appendChild(li);
 
   menuItems.forEach(text => {
     const li = document.createElement("li");
     const a = document.createElement("a");
 
     a.textContent = text;
-    a.href = "#"; // если нужно — можно заменить на реальную ссылку
+    //a.href = "#"; // если нужно — можно заменить на реальную ссылку
 
     // Materialize tooltip
     a.classList.add("tooltipped");
+    a.style.cursor = "default";
     a.setAttribute("data-tooltip", text);
     a.setAttribute("data-position", "right");
 
     li.appendChild(a);
     menu.appendChild(li);
+
+    if(text == nameCreateFolder) clickOnMenu(a); // при добавлении новой папки выделяем новую папку
   });
 
   // инициализация tooltip

@@ -45,6 +45,29 @@
       <button type="button" class="modal-close btn-flat">OK</button>
     </div>
   </div>
+  <!-- CREATE FOLDER WINDOW -->
+<div id="create-folder-modal" class="modal">
+  <div class="modal-content">
+    <h5>Новая папка</h5>
+
+    <div class="input-field">
+      <input id="folder-name-input" type="text" maxlength="64" autocomplete="off">
+      <label for="folder-name-input">Имя папки</label>
+
+      <!-- статус под полем -->
+      <div id="folder-name-status" class="grey-text text-darken-1" style="margin-top:6px;">
+        Введите имя папки…
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="modal-close btn-flat">Отмена</button>
+    <button type="button" id="create-folder-confirm" class="btn waves-effect waves-light" disabled>
+      OK
+    </button>
+  </div>
+</div>
   <div class="app">
       <!-- ПРИЛОЖЕНИЕ -->
       <!-- Фиксированная верхняя панель -->
@@ -205,6 +228,8 @@
       <script src="js/left-menu.js"></script>
       <script src="js/list-files-collapsible.js"></script>
       <script src="js/filling-collapsible-list-an-menu.js"></script>
+      <script src="js/global-click.js"></script>
+      <script src="js/validate-folder-name.js"></script>
       <script src="js/settings.js"></script>
       <script>
 

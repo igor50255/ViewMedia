@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -174,6 +175,35 @@ public partial class MainWindow : Window
                     Browser.CoreWebView2.PostWebMessageAsJson(
                         System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-second-folders", pathFolders = directories })
                     );
+                    break;
+                }
+            case "create-first-folder":
+                {
+                    var folder = root.GetProperty("nameFolder").GetString() ?? "";
+
+                    Directory.CreateDirectory(System.IO.Path.Combine(rootContent, folder));
+                    // получаем массив папок в главной директории (только имена)
+                    var directories = Directory.GetDirectories(rootContent).Select(System.IO.Path.GetFileName).ToArray();
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "create-first-folder-restart", nameFolder = folder, pathFolders = directories })
+                        );
+                    break;
+                }
+            case "create-second-folder":
+                {
+                    var folder = root.GetProperty("nameFolder").GetString() ?? "";
+                    var patent = root.GetProperty("parentFolder").GetString() ?? "";
+
+                    // Создаём 
+                    Directory.CreateDirectory(System.IO.Path.Combine(rootContent, patent + "/" + folder));
+                    // получаем массив папок в выбранной директории (только имена)
+                    var firstDirectory = System.IO.Path.Combine(rootContent, patent);
+                    var directories = Directory.GetDirectories(firstDirectory).Select(System.IO.Path.GetFileName).ToArray();
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "create-second-folder-restart", nameFolder = folder, pathFolders = directories })
+                        );
                     break;
                 }
         }
