@@ -54,3 +54,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+#files-collection{
+  max-height: calc(100vh - 100px);
+   overflow-y: auto;      /* вертикальный скролл */
+}

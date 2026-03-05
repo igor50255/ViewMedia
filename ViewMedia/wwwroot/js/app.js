@@ -42,6 +42,24 @@ window.chrome.webview.addEventListener('message', (e) => {
       fiilingMenuItems(menuItems);
     }
   }
+  // перезгрузка списков папок при создании новой папки в первом уровне
+  else if (msg.type == 'create-first-folder-restart') {
+    let nameCreateFolder = msg.nameFolder;
+    let directories = msg.pathFolders;
+    // заполнение меню и выпадающего списка данными
+    if (directories) {
+      fiilingSelectionFolders([], directories, nameCreateFolder);
+    }
+  }
+  // перезгрузка списков папок при создании новой папки во втором уровне
+  else if (msg.type == 'create-second-folder-restart') {
+    let nameCreateFolder = msg.nameFolder;
+    let menuItems = msg.pathFolders;
+    // заполнение меню и выпадающего списка данными
+    if (menuItems) {
+      fiilingMenuItems(menuItems, nameCreateFolder);
+    }
+  }
   // отключение оверлея загрузки
   else if (msg.type == 'finish-overlay') {
     hideLoader();

@@ -1,34 +1,58 @@
 document.addEventListener('DOMContentLoaded', () => {
-        const nameActivMenuSidenav = document.getElementById('nameActivSidenavMenu'); // активное эл в меню-гамбургер
 
-        const sidenavEl = document.querySelector('.sidenav');
-        const sidenavInstance = M.Sidenav.init(sidenavEl, {
-          inDuration: 800,
-          outDuration: 800
-        });
+  const sidenavEl = document.querySelector('.sidenav');
+  const sidenavInstance = M.Sidenav.init(sidenavEl, {
+    inDuration: 800,
+    outDuration: 800
+  });
 
-        // Закрывать sidenav при клике на любой пункт
-        sidenavEl.addEventListener('click', (e) => {
-          const link = e.target.closest('a');
-          if (!link) return;
+  // Действия при клике на любой пункт меню
+  sidenavEl.addEventListener('click', async (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
 
-          // 1. Убираем active у всех пунктов
-          sidenavEl.querySelectorAll('li').forEach(li => {
-            li.classList.remove('active');
-          });
+    if (link.dataset.action === "add-folder") {
+      // получаем все элементы меню-гамбургер
+      const names = Array.from(document.querySelectorAll("#mobile-menu a")).map(a => a.textContent.trim());
+      console.log(names);
+      // Вызываем диалоговое окно для вода имени папки и получаем имя новой папки
+      const nameCreateFolder = await openCreateFolderModal(names);
+      console.log("Валидное имя папки:", nameCreateFolder);
 
-          // 2. Добавляем active к выбранному пункту
-          link.parentElement.classList.add('active');
-          const nameActivMenu = link.textContent.trim();
+      // родительская директория
+      const parentFolder = document.querySelector('#files-count').textContent;
 
-          // 3. именение указателя возле меню-гамбургер
-          nameActivMenuSidenav.textContent = nameActivMenu; 
-          nameActivMenuSidenav.setAttribute("data-tooltip", nameActivMenu);
-          nameActivMenuSidenav.setAttribute("data-position", "right");
-
-          console.log('Клик по пункту меню:', nameActivMenu);
-
-          // 3. Закрываем меню
-          sidenavInstance.close();
-        });
+      // отправка запроса для создания папки 
+      const pathFolders = { type: 'create-second-folder', nameFolder: nameCreateFolder, parentFolder: parentFolder };
+      chrome.webview.postMessage(pathFolders);
+    }
+    else {
+      // 1. Убираем active у всех пунктов
+      sidenavEl.querySelectorAll('li').forEach(li => {
+        li.classList.remove('active');
       });
+      // 2. Делаем активным кликнутый пункт и изменяем имя активного элемента возле иконки меню
+      clickOnMenu(link);
+    }
+
+    // 3. Закрываем меню
+    sidenavInstance.close();
+  });
+});
+
+function clickOnMenu(link) {
+  const nameActivMenuSidenav = document.getElementById('nameActivSidenavMenu'); // активное эл в меню-гамбургер
+
+  // 2. Добавляем active к выбранному пункту
+  link.parentElement.classList.add('active');
+  const nameActivMenu = link.textContent.trim();
+
+  // 3. изменение указателя возле меню-гамбургер
+  nameActivMenuSidenav.textContent = nameActivMenu;
+  nameActivMenuSidenav.setAttribute("data-tooltip", nameActivMenu);
+  nameActivMenuSidenav.setAttribute("data-position", "right");
+
+  console.log('Клик по пункту меню:', nameActivMenu);
+}
+
+
