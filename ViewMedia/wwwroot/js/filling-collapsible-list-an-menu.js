@@ -23,7 +23,8 @@ function fiilingSelectionFolders(menuItems, folders, nameCreateFolder = false) {
 
   folders.forEach(file => {
     const item = document.createElement("div");
-    item.className = "collection-item";
+    item.classList.add("collection-item", "context-item");
+    item.setAttribute("data-context", "parent-folder");
     item.textContent = file;
     item.classList.add("tooltipped");
     item.setAttribute("data-tooltip", file);
@@ -69,10 +70,11 @@ function fiilingMenuItems(menuItems, nameCreateFolder = null) {
     const a = document.createElement("a");
 
     a.textContent = text;
+    a.setAttribute("data-context", "mobile-menu");
     //a.href = "#"; // если нужно — можно заменить на реальную ссылку
 
     // Materialize tooltip
-    a.classList.add("tooltipped");
+    a.classList.add("tooltipped", "context-item");
     a.style.cursor = "default";
     a.setAttribute("data-tooltip", text);
     a.setAttribute("data-position", "right");

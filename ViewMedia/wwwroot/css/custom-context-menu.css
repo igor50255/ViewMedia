@@ -1,0 +1,29 @@
+.custom-context-menu {
+  position: fixed;
+  display: none;
+  min-width: 200px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.custom-context-menu.active {
+  display: block;
+}
+
+.custom-context-menu ul {
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+}
+
+.custom-context-menu li {
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.custom-context-menu li:hover {
+  background: #eeeeee;
+}
