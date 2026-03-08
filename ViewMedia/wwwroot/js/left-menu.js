@@ -15,8 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // получаем все элементы меню-гамбургер
       const names = Array.from(document.querySelectorAll("#mobile-menu a")).map(a => a.textContent.trim());
       console.log(names);
-      // Вызываем диалоговое окно для вода имени папки и получаем имя новой папки
-      const nameCreateFolder = await openCreateFolderModal(names);
+      // Вызываем диалоговое окно создания новой папки для вода имени папки и получаем имя новой папки
+      const modalEl = document.getElementById("create-folder-modal");
+      const nameCreateFolder = await openCreateFolderModal(names, modalEl);
+
+      console.log("Результат окна:", nameCreateFolder);
+      if (nameCreateFolder === null) return; // пользователь отменил
+
       console.log("Валидное имя папки:", nameCreateFolder);
 
       // родительская директория

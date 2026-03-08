@@ -52,11 +52,11 @@
             <h5>Новая папка</h5>
 
             <div class="input-field">
-                <input id="folder-name-input" type="text" maxlength="64" autocomplete="off">
+                <input class="folder-name-input" type="text" maxlength="64" autocomplete="off">
                 <label for="folder-name-input">Имя папки</label>
 
                 <!-- статус под полем -->
-                <div id="folder-name-status" class="grey-text text-darken-1" style="margin-top:6px;">
+                <div class="folder-name-status grey-text text-darken-1" style="margin-top:6px;">
                     Введите имя папки…
                 </div>
             </div>
@@ -64,8 +64,49 @@
 
         <div class="modal-footer">
             <button type="button" class="modal-close btn-flat">Отмена</button>
-            <button type="button" id="create-folder-confirm" class="btn waves-effect waves-light" disabled>
+            <button type="button" class="create-folder-confirm btn waves-effect waves-light" disabled>
                 OK
+            </button>
+        </div>
+    </div>
+    <!-- RENAME FOLDER WINDOW -->
+    <div id="rename-folder-modal" class="modal">
+        <div class="modal-content">
+            <h5>Введите новое имя папки:</h5>
+            <div id="old-name-rename"></div>
+
+            <div class="input-field">
+                <input class="folder-name-input" type="text" maxlength="64" autocomplete="off">
+                <label for="folder-name-input">Имя папки</label>
+
+                <!-- статус под полем -->
+                <div class="folder-name-status grey-text text-darken-1" style="margin-top:6px;">
+                    Введите имя папки…
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="modal-close btn-flat">Отмена</button>
+            <button type="button" class="create-folder-confirm btn waves-effect waves-light" disabled>
+                OK
+            </button>
+        </div>
+    </div>
+    <!-- CONFIRM OPERATION WINDOW -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h5 id="confirm-modal-title">Подтверждение</h5>
+            <p id="confirm-modal-text">Здесь текст вопроса</p>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" id="confirm-modal-cancel" class="btn-flat modal-close">
+                Отмена
+            </button>
+
+            <button type="button" id="confirm-modal-ok" class="btn waves-effect waves-light ">
+                Удалить
             </button>
         </div>
     </div>
@@ -246,6 +287,12 @@
         <script src="js/global-click.js"></script>
         <script src="js/validate-folder-name.js"></script>
         <script src="js/custom-context-menu.js"></script>
+        <script src="js/modal-windows.js"></script>
+        <script src="js/second-folder-delete.js"></script>
+        <script src="js/second-folder-rename.js"></script>
+        <script src="js/first-folder-delete.js"></script>
+        <script src="js/first-folder-rename.js"></script>
+        <script src="js/clipboard-api.js"></script>
         <script src="js/settings.js"></script>
         <script>
 

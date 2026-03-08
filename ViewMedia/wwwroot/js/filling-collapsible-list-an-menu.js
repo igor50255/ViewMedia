@@ -32,6 +32,8 @@ function fiilingSelectionFolders(menuItems, folders, nameCreateFolder = false) {
     collection1.appendChild(item);
   });
 
+  setActiveSelectionFolder(folders[0]);// делаем активным первый пункт в списке
+
   // Заполнение меню-гамбургер (слева)
   fiilingMenuItems(menuItems);
 
@@ -41,6 +43,8 @@ function fiilingSelectionFolders(menuItems, folders, nameCreateFolder = false) {
     const collapsibleType = document.querySelector('#list-files');
     const headerTextType = collapsibleType.querySelector('#files-count');
     headerTextType.textContent = nameCreateFolder;
+    // делаем активным первый пункт в списке
+    setActiveSelectionFolder(nameCreateFolder);
     // открываем меню-гамбургер
     const menu = document.getElementById('mobile-menu');
     const instance1 = M.Sidenav.getInstance(menu);
@@ -95,6 +99,7 @@ function fiilingMenuItems(menuItems, nameCreateFolder = null) {
     position: 'bottom',     // top | right | bottom | left
   });
 }
+
 
 
 

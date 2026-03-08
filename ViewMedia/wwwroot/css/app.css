@@ -66,3 +66,8 @@ nav {
   padding: 10px 24px 12px 24px;
   min-height: 0 !important;    /* перебить min-height Materialize */
 }
+
+/* для того, чтобы снять клик с label. В модальных окнах в длинных label происходит уход лабели в сторону */
+.input-field label {
+  pointer-events: none;
+}

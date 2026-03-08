@@ -1,11 +1,15 @@
 // 1) Вешаем глобальный клик для для закрития выпадающих списков при клике где угодно
 document.addEventListener("pointerdown", (e) => {
-  const onFilesBtn   = e.target.closest("#files-count");
+  const inFilesList = e.target.closest("#list-files");
+  const inContextMenu = e.target.closest("#file-context-menu"); // клик внутри контекстоного меню
 
-  const inFilesList  = e.target.closest("#list-files");
+  // Есть ли сейчас открытая модалка
+  const openedModal = document.querySelector(".modal.open");
+  // Пока открыта модалка — списки не закрываем вообще
+  if (openedModal) return;
 
   // 2) Клик внутри списков -> ничего не делаем
-  if (inFilesList) return;
+  if (inFilesList || inContextMenu) return;
 
   // 3) Клик везде вне триггеров и списков -> закрыть оба
   closeCollapsible("#list-files");

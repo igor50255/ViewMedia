@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using ViewMedia.StartServices;
@@ -204,6 +205,124 @@ public partial class MainWindow : Window
                     Browser.CoreWebView2.PostWebMessageAsJson(
                         System.Text.Json.JsonSerializer.Serialize(new { type = "create-second-folder-restart", nameFolder = folder, pathFolders = directories })
                         );
+                    break;
+                }
+            case "rename-second-folder":
+                {
+                    var oldFolderName = root.GetProperty("oldName").GetString() ?? "";
+                    var newFolderName = root.GetProperty("newName").GetString() ?? "";
+                    var patent = root.GetProperty("parentFolder").GetString() ?? "";
+                    var oldPath = System.IO.Path.Combine(rootContent, patent + "/" + oldFolderName);
+                    var newPath = System.IO.Path.Combine(rootContent, patent + "/" + newFolderName);
+                    var check = false;
+                    try
+                    {
+                        // Переименовываем
+                        Directory.Move(oldPath, newPath);
+                        check = true;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Что-то идёт не так! Не получается переименовать");
+                    }
+
+                    if (check)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "rename-second-folder-restart", oldName = oldFolderName, newName = newFolderName })
+                            );
+                    }
+                    
+                    break;
+                }
+            case "delete-second-folder":
+                {
+                    var deleteFolderName = root.GetProperty("deleteName").GetString() ?? "";
+                    var patent = root.GetProperty("parentFolder").GetString() ?? "";
+                    var deletePath = System.IO.Path.Combine(rootContent, patent + "/" + deleteFolderName);
+                    var check = false;
+                    try
+                    {
+                        // Удаление
+                        Directory.Delete(deletePath, true);
+                        check = true;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Что-то идёт не так! Не получается удалить папку!");
+                    }
+
+                    if (check)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "delete-second-folder-restart", deleteName = deleteFolderName })
+                            );
+                    }
+
+                    break;
+                }
+            case "rename-first-folder":
+                {
+                    var oldFolderName = root.GetProperty("oldName").GetString() ?? "";
+                    var newFolderName = root.GetProperty("newName").GetString() ?? "";
+ 
+                    var oldPath = System.IO.Path.Combine(rootContent, oldFolderName);
+                    var newPath = System.IO.Path.Combine(rootContent, newFolderName);
+                    var check = false;
+                    try
+                    {
+                        // Переименовываем
+                        Directory.Move(oldPath, newPath);
+                        check = true;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Что-то идёт не так! Не получается переименовать");
+                    }
+
+                    if (check)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "rename-first-folder-restart", oldName = oldFolderName, newName = newFolderName })
+                            );
+                    }
+
+                    break;
+                }
+            case "delete-first-folder":
+                {
+                    var deleteFolderName = root.GetProperty("deleteName").GetString() ?? "";
+                    var deletePath = System.IO.Path.Combine(rootContent, deleteFolderName);
+                    var check = false;
+                    bool isEmpty = false;
+                    try
+                    {
+                        // провека, если папка не пуста
+                        isEmpty = !Directory.EnumerateFileSystemEntries(deletePath).Any();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Что-то идёт не так! Не получается удалить папку!");
+                    }
+
+                    if (isEmpty)
+                    {
+                        Directory.Delete(deletePath);
+                        check = true;
+                    }
+                    else
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "delete-first-folder-restart", result = false,  deleteName = deleteFolderName })
+                            );
+                    }
+
+                    if (check)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "delete-first-folder-restart", result = true, deleteName = deleteFolderName })
+                            );
+                    }
                     break;
                 }
         }
