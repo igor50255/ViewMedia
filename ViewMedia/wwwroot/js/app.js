@@ -17,14 +17,14 @@ window.chrome.webview.addEventListener('message', (e) => {
     let images = msg.data;
     console.log(images); // проверка контента
   }
-  // получение актуального пути к папке с контентом
+  // Получение актуального пути к папке с контентом
   else if (msg.type == 'set-path-content') {
     let path = msg.pathContent;
     // прописывам актуальный путь 
     const content = document.querySelector('#path-content');
     content.textContent = path;
   }
-  // получение массива папок и заполнение списков выбора
+  // Получение массива папок и заполнение списков выбора
   else if (msg.type == 'set-path-folders') {
     let directories = msg.pathFolders;
     // заполнение меню и выпадающего списка данными
@@ -33,7 +33,7 @@ window.chrome.webview.addEventListener('message', (e) => {
     }
     console.log("sdfasdf: " + directories);
   }
-  // получение массива папок в заданной директории
+  // Получение массива папок в заданной директории
   else if (msg.type == 'set-path-second-folders') {
     let menuItems = msg.pathFolders;
     // заполнение меню и выпадающего списка данными
@@ -42,7 +42,7 @@ window.chrome.webview.addEventListener('message', (e) => {
       fiilingMenuItems(menuItems);
     }
   }
-  // перезгрузка списков папок при создании новой папки в первом уровне
+  // Создание новой папки в первом уровне
   else if (msg.type == 'create-first-folder-restart') {
     let nameCreateFolder = msg.nameFolder;
     let directories = msg.pathFolders;
@@ -51,7 +51,7 @@ window.chrome.webview.addEventListener('message', (e) => {
       fiilingSelectionFolders([], directories, nameCreateFolder);
     }
   }
-  // перезгрузка списков папок при создании новой папки во втором уровне
+  // Создание новой папки во втором уровне
   else if (msg.type == 'create-second-folder-restart') {
     let nameCreateFolder = msg.nameFolder;
     let menuItems = msg.pathFolders;
@@ -59,6 +59,36 @@ window.chrome.webview.addEventListener('message', (e) => {
     if (menuItems) {
       fiilingMenuItems(menuItems, nameCreateFolder);
     }
+  }
+  // Переименовывании папки во втором уровне
+  else if (msg.type == 'rename-second-folder-restart') {
+    // заполнение меню новыми данными
+    renameMenuItems(msg.oldName, msg.newName);
+  }
+  // Удаление папки во втором уровне
+  else if (msg.type == 'delete-second-folder-restart') {
+    // заполнение меню и выпадающего списка данными
+    deleteMenuItems(msg.deleteName);
+  }
+  // Удаление папки в первом уровне
+  else if (msg.type == 'delete-first-folder-restart') {
+    let nameDeleteFolder = msg.deleteName;
+    let result = msg.result;
+    if (result){
+      console.log("Папка успешно удалена!");
+      deleteSelectionFolder(nameDeleteFolder);
+    }
+    else{
+      console.log("Папка не пуста!");
+      showInfo(`Папка <b>${nameDeleteFolder}</b> не пуста!`);
+    }
+   
+  }
+  // Переименование папки в первом уровне
+  else if (msg.type == 'rename-first-folder-restart') {
+    // заполнение меню и выпадающего списка данными
+    renameNameFolderFirstLevel(msg.oldName, msg.newName);
+    console.log("Папка успешно переименована!");
   }
   // отключение оверлея загрузки
   else if (msg.type == 'finish-overlay') {

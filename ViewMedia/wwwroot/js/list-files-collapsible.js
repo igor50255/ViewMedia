@@ -18,15 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = document.querySelectorAll("#files-collection .collection-item");
         const names = Array.from(items).map(el => el.textContent.trim());
         console.log(names);
-        // Вызываем диалоговое окно для вода имени папки и получаем имя новой папки
-        const nameCreateFolder = await openCreateFolderModal(names);
-        console.log("Создаём папку:", nameCreateFolder);
+        // Вызываем диалоговое окно создания новой папки для вода имени папки и получаем имя новой папки
+        const modalEl = document.getElementById("create-folder-modal");
+        const nameCreateFolder = await openCreateFolderModal(names, modalEl);
+
+        console.log("Результат окна:", nameCreateFolder);
+        if (nameCreateFolder === null) return; // пользователь отменил
+        console.log("Валидное имя папки:", nameCreateFolder);
 
         // отправка запроса для создания папки
         const pathFolders = { type: 'create-first-folder', nameFolder: nameCreateFolder };
         chrome.webview.postMessage(pathFolders);
       }
       else {
+        setActiveSelectionFolder(typeModel);
         // меняем заголовок
         headerTextType.textContent = typeModel;
 
@@ -61,3 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+// Функция выделения элемента у папок первого уровня
+function setActiveSelectionFolder(name) {
+  const items = document.querySelectorAll("#files-collection .context-item");
+
+  items.forEach(item => {
+    if (item.textContent === name) {
+      item.classList.add("active");     // делаем активным
+    } else {
+      item.classList.remove("active");  // убираем активность у остальных
+    }
+  });
+}

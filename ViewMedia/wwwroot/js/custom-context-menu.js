@@ -37,7 +37,7 @@ document.addEventListener('contextmenu', function (e) {
 });
 
 // Клик по пункту меню
-contextMenu.addEventListener('click', function (e) {
+contextMenu.addEventListener('click', async function (e) {
   const menuItem = e.target.closest('li[data-action]');
   if (!menuItem || !currentFileElement) return;
 
@@ -53,34 +53,40 @@ contextMenu.addEventListener('click', function (e) {
   if (context === 'parent-folder') {
     switch (action) {
       case 'rename':
-        M.toast({ html: `Первое меню: Переименовать: ${folderName}` });
+        copyToClipboard(folderName); // скопировать в буфер обмена
+        // Переименовать папку первого уровня
+        await renameFirstFolder(folderName);
         break;
       case 'delete':
-        M.toast({ html: `Первое меню: Удалить: ${folderName}` });
+        // Удаление папки первого уровня
+        await deleteFirstFolder(folderName);
         break;
     }
   }
   if (context === 'mobile-menu') {
     switch (action) {
       case 'rename':
-        M.toast({ html: `Второе меню: Переименовать: ${folderName}` });
+        copyToClipboard(folderName); // скопировать в буфер обмена
+        // Переименовать папку второго уровня
+        await renameSecondFolder(folderName);
         break;
       case 'delete':
-        M.toast({ html: `Второе меню: Удалить: ${folderName}` });
+        // Удаление папки второго уровня
+        await deleteSecondFolder(folderName);
         break;
     }
   }
 
-    // Закрытие меню
-    contextMenu.classList.remove('active');
-  });
+  // Закрытие меню
+  contextMenu.classList.remove('active');
+});
 
-  // Закрытие меню по обычному клику
-  document.addEventListener('click', function () {
-    contextMenu.classList.remove('active');
-  });
+// Закрытие меню по обычному клику
+document.addEventListener('click', function () {
+  contextMenu.classList.remove('active');
+});
 
-  // Закрытие меню при скролле
-  window.addEventListener('scroll', function () {
-    contextMenu.classList.remove('active');
-  });
+// Закрытие меню при скролле
+window.addEventListener('scroll', function () {
+  contextMenu.classList.remove('active');
+});
