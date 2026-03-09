@@ -47,3 +47,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* скролл переносим в левую сторону */
+.sidenav{
+  direction: rtl;
+  padding-right: 13px;
+  padding-top: 3px;
+}
+/* кнопки переносим обратно в правую */
+.sidenav li{
+  direction: ltr;
+  margin-left: 3px;
+}
+
+/* чисто то, что относится к ручке для раздвижения меню */
+.sidenav.resizable-sidenav {
+  width: 300px;
+  min-width: 200px;
+  max-width: 600px;
+}
+/* ручка изменения ширины */
+#mobile-menu .resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  width: 7px;
+  height: 100%;
+  cursor: ew-resize;
+  background: rgba(0, 0, 0, 0.1);
+}
