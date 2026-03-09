@@ -1,6 +1,8 @@
 /* постоянно видимый значёк меню-гамбургер */
 .sidenav-trigger {
   display: block !important;
+  margin: 0 !important;
+  padding-inline: 30px;
 }
 
 /* изменение цвета активной вкладки в меню-гамбургер */
@@ -28,11 +30,6 @@
 .navbar-fixed nav i.material-icons {
   height: 64px;
   line-height: 64px;
-}
-
-/* отступы справи и слево у меню-гамбургер */
-.sidenav-trigger {
-  padding-inline: 15px;
 }
 
 /* размер меню-гамбургер */

@@ -1,3 +1,4 @@
+
 /* ------------- костомизация выпадающего списка выбора папки первого уровня --------------- */
 .collapsible {
   box-shadow: none !important;
@@ -24,9 +25,11 @@
 }
 
 /* подсвечиваем выделение типов моделей при наведении мышью (меню справа) */
+.sidenav-trigger:hover,
+#btn-plus:hover,
 #open-settings:hover,
 #list-files .collapsible-header:hover {
-  background-color: rgba(0, 0, 0, 0.06) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* выделяем элементы списка при наведении мышью (меню справа) */ 

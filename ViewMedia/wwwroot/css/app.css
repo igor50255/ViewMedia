@@ -17,6 +17,7 @@ body {
 .header-flex {
   display: flex;
   justify-content: space-between;
+  padding: 0;
 }
 
 .left-buttons,
@@ -30,31 +31,40 @@ nav {
 }
 
 /* размер шрифта */
+#btn-plus,
 .header-coll-flex,
+#open-settings,
 #nameActivSidenavMenu {
   font-size: 1.1rem;
   font-weight: 600;
+  text-transform: none;
+  height: 100%;
+  box-shadow: none !important;
 }
 /* автоматически обрезает длинный текст и добавляет ... */
 #nameActivSidenavMenu {
   cursor: default;
   max-width: 200px;
   min-width: 0;
+  margin-left: 25px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 #view-window{
   overflow-y: auto;
 }
 /* ------------------------------------------------------------------------- */
-
+/* настройка кнопок */
 #open-settings {
-  height: 100%;
-  width: 80px;
-  font-size: 1rem;
-  margin: 0;
-  box-shadow: none !important;
+  padding-inline: 35px;
+}
+#open-settings i{
+  font-size: 1.4rem;
+}
+#btn-plus{
+  padding-inline: 70px;
 }
 
 /* всплывающая подсказка */
