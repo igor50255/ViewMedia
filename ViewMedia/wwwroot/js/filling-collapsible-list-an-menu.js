@@ -89,6 +89,14 @@ function fiilingMenuItems(menuItems, nameCreateFolder = null) {
     if(text == nameCreateFolder) clickOnMenu(a); // при добавлении новой папки выделяем новую папку
   });
 
+  // Ручка для изменения ширины
+  // const hand = document.createElement("div");
+  // hand.className = "resize-handle";
+  // menu.appendChild(hand);
+
+  // Создание ручки для изменения ширины
+  initResizableSidenav(menu);
+
   // инициализация tooltip
   const elems = document.querySelectorAll('.tooltipped');
   M.Tooltip.init(elems, {
