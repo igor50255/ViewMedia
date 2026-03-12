@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="materialize/css/materialize.min.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/overlay.css">
     <link rel="stylesheet" href="css/left-menu.css">
     <link rel="stylesheet" href="css/list-files-collapsible.css">
@@ -124,7 +125,8 @@
                         <div id="nameActivSidenavMenu" class="tooltipped"></div>
                     </div>
                     <div class="right-buttons">
-                        <button id="btn-plus" class="btn btn-large waves-effect waves-light cyan darken-4">+&nbsp;Добавить</button>
+                        <button id="btn-plus"
+                            class="btn btn-large waves-effect waves-light cyan darken-4">+&nbsp;Добавить</button>
                         <ul id="list-files" class="collapsible">
                             <li>
                                 <div class="collapsible-header header-coll-flex cyan darken-4 white-text">
@@ -146,22 +148,12 @@
             </nav>
         </div>
 
-        <!-- Выезжающее меню слева -->
-        <ul id="mobile-menu" class="sidenav resizable-sidenav">   
-            
-        </ul>
-
-        <!-- Контекстное меню -->
-        <div id="file-context-menu" class="custom-context-menu">
-            <ul>
-                <li data-action="rename">Переименовать</li>
-                <li data-action="delete">Удалить</li>
-            </ul>
-        </div>
 
         <div id="view-window">
+            <!-- Галерея для превью -->
+            <main id="grid" class="gallery-grid"></main>
+            <!-- HELP / СПРАВКА -->
             <div id="settings" class="content set hide">
-                <!-- HELP / СПРАВКА (Materialize CSS) -->
                 <div class="container" style="margin-top: 24px;">
                     <div class="card z-depth-2">
                         <div class="card-content">
@@ -179,15 +171,18 @@
                                 </li>
 
                                 <li class="collection-item">
-                                    Основной единицей является <b>папка</b>, названная <b>по имени модели</b>. В ней уже
+                                    Основной единицей является <b>папка</b>, названная <b>по имени модели</b>. В ней
+                                    уже
                                     может быть архив и другая информация.
                                 </li>
 
                                 <li class="collection-item">
                                     Для создания превью в папке должна быть хотя бы <b>одна картинка</b>.
-                                    Там будет создана папка <b>"preview"</b> и в неё добавится первая картинка из папки
+                                    Там будет создана папка <b>"preview"</b> и в неё добавится первая картинка из
+                                    папки
                                     модели.
-                                    После создания, превью можно заменить вручную, но оставьте имя файла <b>"0.*"</b>.
+                                    После создания, превью можно заменить вручную, но оставьте имя файла
+                                    <b>"0.*"</b>.
                                     Если картинок нет — будет использована <b>дефолтная</b> картинка.
                                 </li>
 
@@ -197,7 +192,8 @@
 
                                 <li class="collection-item">
                                     <b>Ctrl + D</b> — включает полноэкранный режим и выводит из него.
-                                    <b>Ctrl + Колёси мыши</b> — увеличивает и уменьшает размер картинок-превью в окне
+                                    <b>Ctrl + Колёси мыши</b> — увеличивает и уменьшает размер картинок-превью в
+                                    окне
                                     программы.
                                 </li>
 
@@ -275,10 +271,25 @@
             </div>
         </div>
 
+        <!-- Выезжающее меню слева -->
+        <ul id="mobile-menu" class="sidenav resizable-sidenav">
+
+        </ul>
+
+        <!-- Контекстное меню -->
+        <div id="file-context-menu" class="custom-context-menu">
+            <ul>
+                <li data-action="rename">Переименовать</li>
+                <li data-action="delete">Удалить</li>
+            </ul>
+        </div>
+
+
 
 
         <script src="materialize/js/materialize.min.js"></script>
 
+        <script src="js/globals.js"></script>
         <script src="js/app.js"></script>
         <script src="js/overlay.js"></script>
         <script src="js/fullscreen.js"></script>
@@ -295,7 +306,9 @@
         <script src="js/second-folder-rename.js"></script>
         <script src="js/first-folder-delete.js"></script>
         <script src="js/first-folder-rename.js"></script>
-        <script src="js/clipboard-api.js"></script>
+        <script src="js/first-folder-rename.js"></script>
+        <script src="js/add-content.js"></script>
+        <script src="js/gallery.js"></script>
         <script src="js/settings.js"></script>
         <script>
 

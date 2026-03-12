@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     outDuration: 800
   });
 
+  let listUrl = [];
+
   // Действия при клике на любой пункт меню
   sidenavEl.addEventListener('click', async (e) => {
     const link = e.target.closest('a');
@@ -36,8 +38,31 @@ document.addEventListener('DOMContentLoaded', () => {
       sidenavEl.querySelectorAll('li').forEach(li => {
         li.classList.remove('active');
       });
-      // 2. Делаем активным кликнутый пункт и изменяем имя активного элемента возле иконки меню
+      // 2. Делаем активным кликнутый пункт и изменяем имя активного элемента возле иконки меню 
       clickOnMenu(link);
+      // 3. Загрузка уже существующих превью в окно программы 
+      const firstFolder = document.getElementById("files-count").textContent;
+      const secondFolder = link.textContent;
+      const pathJson = `https://${window.hostNameToFolderMapper}/${firstFolder}/${secondFolder}/${window.nameConnectionFileJson}`;
+      const pathFolderPreview = `https://${window.hostNameToFolderMapper}/${firstFolder}/${secondFolder}/${window.nameFolderPreview}`;
+      window.pathConnectionFileJson = pathJson;
+      console.log(pathJson);
+      // получаем данные из json-файла этого окна
+      async function loadData() {
+        const response = await fetch(pathJson);
+        const data = await response.json();
+
+        initGallery(data, pathFolderPreview); // заполнение галереи картинками
+        window.listVideoId = data.map(item => item.VideoId); // заполнение списка Id для избежания дублирования
+        console.log("Список listVideoId шт:" + window.listVideoId.length);
+        console.log(window.listVideoId);
+
+        // data.forEach(item => {
+        //   console.log(item.PreviewName);
+        // });
+      }
+
+      loadData();
     }
 
     // 3. Закрываем меню

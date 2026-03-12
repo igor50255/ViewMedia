@@ -1,0 +1,66 @@
+:root {
+  --card-w: 340px;
+  --gap: 16px;
+  --radius: 14px;
+}
+
+* {
+  /* border-box: чтобы padding не влиял на расчёт ширины колонок */
+  box-sizing: border-box;
+}
+
+.gallery-grid {
+  padding: 20px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-w)), 1fr));
+  align-items: start;
+}
+
+.gallery-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #181818;
+  color: azure;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+  min-width: 0;
+}
+
+.gallery-thumb {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #222;
+  display: block;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-meta {
+  padding: 10px 12px 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.gallery-title {
+  font-size: 14px;
+  line-height: 1.2;
+  opacity: .95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gallery-sub {
+  font-size: 12px;
+  opacity: .65;
+}
+
+.gallery-card.placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}

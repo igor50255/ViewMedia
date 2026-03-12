@@ -1,10 +1,18 @@
 // Вызвать окно со справкой и изменением пути к папке с контентом
 document.getElementById("open-settings").addEventListener("click", () => {
   const setings = document.getElementById("settings");
-  setings.classList.remove("hide");
-  
+  const grid = document.getElementById("grid");
+
+  if (setings.classList.contains('hide')) {
+    setings.classList.remove('hide');
+    grid.classList.add('hide');
+  } else {
+    setings.classList.add('hide');
+    grid.classList.remove('hide');
+  }
+
   console.log("settings");
-  
+
 });
 
 // Изменить путь к папке с контентом
