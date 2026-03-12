@@ -1,11 +1,14 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Security.Policy;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
+using ViewMedia.DTO;
+using ViewMedia.Services;
 using ViewMedia.StartServices;
 
 namespace ViewMedia;
@@ -19,6 +22,9 @@ public partial class MainWindow : Window
     string hostGallery = "gallery";
     string rootContent = @"D:\ContentViewMedia";
     string defaultImg = @"Resources\default.png";
+    string nameConnectionFileJson = "connection.json";
+    string nameFolderPreview = "preview";
+    string nameFolderVideo = "video";
     public MainWindow()
     {
         InitializeComponent();
@@ -119,9 +125,12 @@ public partial class MainWindow : Window
             case "get-path-content": // получить актуальный путь к папке с контентом
                 {
                     var pathContent = Properties.Settings.Default.rootFolderPath;
+                    var hostNameToFolderMapper = hostGallery;
 
                     Browser.CoreWebView2.PostWebMessageAsJson(
-                        System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-content", pathContent = pathContent.ToString() })
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "set-path-content", 
+                            pathContent = pathContent.ToString(), hostNameToFolderMapper, 
+                            nameConnectionFileJson, nameFolderPreview, nameFolderVideo })
                     );
                     break;
                 }
@@ -195,9 +204,14 @@ public partial class MainWindow : Window
                 {
                     var folder = root.GetProperty("nameFolder").GetString() ?? "";
                     var patent = root.GetProperty("parentFolder").GetString() ?? "";
+                    var createFolderPath = System.IO.Path.Combine(rootContent, patent + "/" + folder);
 
-                    // Создаём 
-                    Directory.CreateDirectory(System.IO.Path.Combine(rootContent, patent + "/" + folder));
+                    // Создаём папку для контента
+                    Directory.CreateDirectory(createFolderPath);
+                    Directory.CreateDirectory(Path.Combine(createFolderPath, nameFolderPreview));// папка для превью
+                    Directory.CreateDirectory(Path.Combine(createFolderPath, nameFolderVideo));// папка для видео
+                    var jsonEmpty = JsonSerializer.Serialize(new List<object>());
+                    File.WriteAllText(Path.Combine(createFolderPath, nameConnectionFileJson), jsonEmpty);// файл json, для хранения данных о связи видео и превью
                     // получаем массив папок в выбранной директории (только имена)
                     var firstDirectory = System.IO.Path.Combine(rootContent, patent);
                     var directories = Directory.GetDirectories(firstDirectory).Select(System.IO.Path.GetFileName).ToArray();
@@ -325,9 +339,73 @@ public partial class MainWindow : Window
                     }
                     break;
                 }
+            case "send-content-path":
+                {
+                    // блок создания превью
+
+                    var firstFolder = root.GetProperty("firstFolder").GetString() ?? "";
+                    var secondFolder = root.GetProperty("secondFolder").GetString() ?? "";
+                    var contentPath = System.IO.Path.Combine(rootContent, firstFolder + "/" + secondFolder);
+
+                    // Получить из буфера обмена ссылку на видео
+                    string pathVideo = Clipboard.GetText();
+                    string validateResult = Validate.ValidateUrl(pathVideo);
+
+                    DataConnection? dataConnection = null;
+
+                    if (validateResult == "ok")
+                    {
+                        string videoId = CreatePreview.GetYoutubeVideoId(pathVideo); // получаем id
+
+                        using HttpClient client = new HttpClient();
+
+                        string url = await CreatePreview.GetYoutubeThumbnailUrl(videoId); // получаем URL превью
+
+                        string title = await CreatePreview.GetYoutubeTitle(pathVideo);
+
+
+                        if (url != null)
+                        {
+                            byte[] image = await client.GetByteArrayAsync(url);
+                            var folderPath = System.IO.Path.Combine(contentPath, nameFolderPreview);
+                            Directory.CreateDirectory(folderPath);
+                            var previewPath = System.IO.Path.Combine(folderPath, $"{CreatePreview.SanitizeFileName(title)}.jpg");
+                            File.WriteAllBytes(previewPath, image);
+
+                            var fileConnectionPath = System.IO.Path.Combine(contentPath, nameConnectionFileJson);
+                            dataConnection = new DataConnection(videoId, pathVideo, $"{CreatePreview.SanitizeFileName(title)}.jpg", "", DateTime.Now);
+                            string res = DataConnectionFile.Save(fileConnectionPath, dataConnection);
+
+                            //MessageBox.Show("Превью скачано");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось скачать превью!");
+                        }
+                    }
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                        System.Text.Json.JsonSerializer.Serialize(new { type = "get-content-result", dataConnection, validateResult })
+                        );
+                    break;
+                }
+            //case "fill-window-content":
+            //    {
+            //        var firstFolder = root.GetProperty("firstFolder").GetString() ?? "";
+            //        var secondFolder = root.GetProperty("secondFolder").GetString() ?? "";
+            //        var connectFilePath = System.IO.Path.Combine(rootContent, firstFolder + "/" + secondFolder + "/" + nameConnectionFileJson);
+
+
+
+            //        Browser.CoreWebView2.PostWebMessageAsJson(
+            //            System.Text.Json.JsonSerializer.Serialize(new { type = "create-first-folder-restart" })
+            //            );
+            //        break;
+            //    }
         }
     }
 
+    
     // развернуть и свернуть окно WPF в полноэкранный режим (без рамки) двойным кликом по окну
     private bool _isWpfFullscreen;
     private WindowStyle _prevWindowStyle;

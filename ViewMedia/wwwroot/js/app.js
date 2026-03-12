@@ -23,6 +23,14 @@ window.chrome.webview.addEventListener('message', (e) => {
     // прописывам актуальный путь 
     const content = document.querySelector('#path-content');
     content.textContent = path;
+    // записываем мапер пути к папке с контентом в глобальную переменную
+    window.hostNameToFolderMapper = msg.hostNameToFolderMapper;
+    // имя файла с данными об превью, видео и время создания контента
+    window.nameConnectionFileJson = msg.nameConnectionFileJson;
+    // имя папки с картинками-превью
+    window.nameFolderPreview = msg.nameFolderPreview;
+    // имя папки для видео
+    window.nameFolderVideo = msg.nameFolderVideo;
   }
   // Получение массива папок и заполнение списков выбора
   else if (msg.type == 'set-path-folders') {
@@ -59,6 +67,11 @@ window.chrome.webview.addEventListener('message', (e) => {
     if (menuItems) {
       fiilingMenuItems(menuItems, nameCreateFolder);
     }
+    // обнуление списка url в этом окне
+    window.listVideoId = [];
+    // очистить окно от старых карточек
+    const grid = document.getElementById("grid");
+    grid.innerHTML = "";
   }
   // Переименовывании папки во втором уровне
   else if (msg.type == 'rename-second-folder-restart') {
@@ -74,21 +87,45 @@ window.chrome.webview.addEventListener('message', (e) => {
   else if (msg.type == 'delete-first-folder-restart') {
     let nameDeleteFolder = msg.deleteName;
     let result = msg.result;
-    if (result){
+    if (result) {
       console.log("Папка успешно удалена!");
       deleteSelectionFolder(nameDeleteFolder);
     }
-    else{
+    else {
       console.log("Папка не пуста!");
       showInfo(`Папка <b>${nameDeleteFolder}</b> не пуста!`);
     }
-   
+
   }
   // Переименование папки в первом уровне
   else if (msg.type == 'rename-first-folder-restart') {
     // заполнение меню и выпадающего списка данными
     renameNameFolderFirstLevel(msg.oldName, msg.newName);
     console.log("Папка успешно переименована!");
+  }
+  // Получение результата из c# при получении контента по ссылке
+  else if (msg.type == 'get-content-result') {
+    const dataConnection = msg.dataConnection;
+    if (dataConnection != null) {
+      console.log("Превью скачалось!");
+      console.log(dataConnection.Url);
+      console.log(dataConnection.PreviewName);
+      console.log(dataConnection.CreatedAt);
+      const firstFolder = document.getElementById("files-count").textContent;
+      const secondFolder = document.getElementById("nameActivSidenavMenu").textContent;
+      const pathFolderPreview = `https://${window.hostNameToFolderMapper}/${firstFolder}/${secondFolder}/${window.nameFolderPreview}`;
+      // Добавление карточки
+      addCard(dataConnection, pathFolderPreview);
+      //addCardPlaice(dataConnection, pathFolderPreview);// добавление карточки на второе место
+
+      // добавить VideoId в список загруженных видео ( в этом окне просмотра)
+      window.listVideoId.push(dataConnection.VideoId);
+    }
+    else {
+      hideLoader(); // скрыть индикатор загрузки на всё окно
+      showInfo(msg.validateResult);
+      console.log("Превью не скачалось!");
+    }
   }
   // отключение оверлея загрузки
   else if (msg.type == 'finish-overlay') {

@@ -9,7 +9,7 @@ function showInfo(text, title = "Информация") {
     instance.open();
 }
 // Удаление папки
-function confirmModal(text) {
+function confirmModal(text, nameButton = "Удалить") {
     return new Promise((resolve) => {
 
         const modalEl = document.getElementById("confirm-modal");
@@ -20,6 +20,7 @@ function confirmModal(text) {
         const cancelBtn = document.getElementById("confirm-modal-cancel");
 
         textEl.innerHTML = text;
+        okBtn.textContent = nameButton;
 
         const cleanup = () => {
             okBtn.onclick = null;
