@@ -111,6 +111,27 @@
             </button>
         </div>
     </div>
+    <!-- ОКНО С ТРЕМЯ КНОПКАМИ -->
+    <div id="three-button-modal" class="modal">
+        <div class="modal-content">
+            <h5 id="three-button-modal-title">Подтверждение</h5>
+            <p id="three-button-modal-text">Здесь текст вопроса</p>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" id="three-button-cancel" class="btn-flat modal-close">
+                Отмена
+            </button>
+
+            <button type="button" id="three-button-show" class="btn waves-effect waves-light ">
+                Показать
+            </button>
+
+            <button type="button" id="three-button-ok" class="btn waves-effect waves-light ">
+                Заменить
+            </button>
+        </div>
+    </div>
     <div class="app">
         <!-- ПРИЛОЖЕНИЕ -->
         <!-- Фиксированная верхняя панель -->
@@ -276,10 +297,17 @@
 
         </ul>
 
-        <!-- Контекстное меню -->
+        <!-- Контекстное меню для папкок -->
         <div id="file-context-menu" class="custom-context-menu">
             <ul>
                 <li data-action="rename">Переименовать</li>
+                <li data-action="delete">Удалить</li>
+            </ul>
+        </div>
+        <!-- Контекстное меню для файлов -->
+        <div id="preview-context-menu" class="custom-context-menu">
+            <ul>
+                <li data-action="open-folder">Открыть папку</li>
                 <li data-action="delete">Удалить</li>
             </ul>
         </div>
@@ -300,7 +328,8 @@
         <script src="js/left-menu-handle.js"></script>
         <script src="js/global-click.js"></script>
         <script src="js/validate-folder-name.js"></script>
-        <script src="js/custom-context-menu.js"></script>
+        <script src="js/custom-context-menu-folder.js"></script>
+        <script src="js/custom-context-menu-file.js"></script>
         <script src="js/modal-windows.js"></script>
         <script src="js/second-folder-delete.js"></script>
         <script src="js/second-folder-rename.js"></script>

@@ -21,9 +21,16 @@ const files = [
 const MAX_FIRST_ROW = 9;
 
 // Создаёт карточку изображения
-function makeCard(src, name) {
+function makeCard(src, name, id, animate = false) {
   const card = document.createElement("div");
   card.className = "gallery-card real";
+
+  if (animate) {
+    card.classList.add("card-fade-in");
+  }
+
+  // Сохраняем id в data-атрибуте
+  card.dataset.id = id;
 
   const a = document.createElement("a");
   a.className = "gallery-thumb";
@@ -54,6 +61,24 @@ function makeCard(src, name) {
 
   card.appendChild(a);
   card.appendChild(meta);
+
+  // Контекстное меню по правому клику
+  card.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+
+    currentContextCard = card;
+
+    const menu = document.getElementById("preview-context-menu");
+    menu.style.left = `${e.clientX}px`;
+    menu.style.top = `${e.clientY}px`;
+    menu.classList.add("active");
+  });
+
+  card.addEventListener("click", function (e) {
+    e.preventDefault();
+    const id = card.dataset.id;
+    console.log("клик: " + id);
+  });
 
   return card;
 }
@@ -143,7 +168,8 @@ function initGallery(data, pathFolderPreview) {
     // const src = `./$images/${encodeURIComponent(f)}`;
     const name = f.PreviewName.substring(0, f.PreviewName.lastIndexOf('.')) || f.PreviewName; // получаем имя без расширения
     const src = `${pathFolderPreview}/${encodeURIComponent(f.PreviewName)}`;
-    grid.appendChild(makeCard(src, name));
+    const id = f.VideoId;
+    grid.appendChild(makeCard(src, name, id));
   }
 
   // первый расчёт плейсхолдеров
@@ -165,18 +191,15 @@ function addCard(file, pathFolderPreview) {
   if (!grid) return;
   const name = file.PreviewName.substring(0, file.PreviewName.lastIndexOf('.')) || file.PreviewName; // получаем имя без расширения
   const src = `${pathFolderPreview}/${encodeURIComponent(file.PreviewName)}`;
-  grid.appendChild(makeCard(src, name));
+  grid.appendChild(makeCard(src, name, file.VideoId, true));
 
   syncPlaceholders();
 
-  hideLoader(); // скрыть индикатор загрузки на всё окно
-  
   // прокрутить скролл вниз
   const view = document.getElementById("view-window");
-  view.scrollTo({
-    top: grid.scrollHeight,
-    behavior: "smooth"
-  });
+  smoothScrollTo(view, grid.scrollHeight, 1200);
+
+  hideLoader(); // скрыть индикатор загрузки на всё окно
 }
 
 // Добавление карточки на второе место
@@ -197,4 +220,45 @@ function addCardPlaice(file, pathFolderPreview) {
   }
 
   syncPlaceholders();
+}
+
+// Плавная прокрутка в самый низ
+function smoothScrollTo(element, target, duration = 800) {
+  const start = element.scrollTop;
+  const change = target - start;
+  const startTime = performance.now();
+
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // easing (медленно → быстро → медленно)
+    const ease = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+    element.scrollTop = start + change * ease;
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// Прокрутка к элементу
+function scrollToElementCenter(container, element, duration = 800) {
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  const offset = elementRect.top - containerRect.top;
+
+  const target =
+    container.scrollTop +
+    offset -
+    container.clientHeight / 2 +
+    element.clientHeight / 2;
+
+  smoothScrollTo(container, target, duration);
 }
