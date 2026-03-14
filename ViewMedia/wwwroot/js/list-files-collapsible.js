@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pathFolders = { type: 'create-first-folder', nameFolder: nameCreateFolder };
         chrome.webview.postMessage(pathFolders);
       }
+      // Выбор другой, уже созданной папки
       else {
         setActiveSelectionFolder(typeModel);
         // меняем заголовок

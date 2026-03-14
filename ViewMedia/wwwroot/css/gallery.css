@@ -64,3 +64,22 @@
   visibility: hidden;
   pointer-events: none;
 }
+
+/* --- плавное исчезновение карточки --- */
+.fade {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+/* плавное появление карточки при добавлении */
+.card-fade-in {
+  animation: cardFadeIn 3s ease;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

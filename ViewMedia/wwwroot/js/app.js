@@ -48,6 +48,8 @@ window.chrome.webview.addEventListener('message', (e) => {
     if (menuItems) {
       // Заполнение меню-гамбургер (слева)
       fiilingMenuItems(menuItems);
+      // сделать в фокусе +Добавить в меню-гамбургер
+      document.querySelector("#mobile-menu li a")?.focus();
     }
   }
   // Создание новой папки в первом уровне
@@ -57,6 +59,11 @@ window.chrome.webview.addEventListener('message', (e) => {
     // заполнение меню и выпадающего списка данными
     if (directories) {
       fiilingSelectionFolders([], directories, nameCreateFolder);
+      // очистить окно от старых карточек
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      // сделать в фокусе +Добавить в меню-гамбургер
+      document.querySelector("#mobile-menu li a")?.focus();
     }
   }
   // Создание новой папки во втором уровне
@@ -72,6 +79,11 @@ window.chrome.webview.addEventListener('message', (e) => {
     // очистить окно от старых карточек
     const grid = document.getElementById("grid");
     grid.innerHTML = "";
+    // новые данные для пути к файлу 
+    const firstFolder = document.getElementById("files-count").textContent;
+    const secondFolder = document.getElementById("nameActivSidenavMenu").textContent;
+    const pathJson = `https://${window.hostNameToFolderMapper}/${firstFolder}/${secondFolder}/${window.nameConnectionFileJson}`;
+    window.pathConnectionFileJson = pathJson;
   }
   // Переименовывании папки во втором уровне
   else if (msg.type == 'rename-second-folder-restart') {
@@ -103,7 +115,7 @@ window.chrome.webview.addEventListener('message', (e) => {
     renameNameFolderFirstLevel(msg.oldName, msg.newName);
     console.log("Папка успешно переименована!");
   }
-  // Получение результата из c# при получении контента по ссылке
+  // Добавление карточки-превью в галерею
   else if (msg.type == 'get-content-result') {
     const dataConnection = msg.dataConnection;
     if (dataConnection != null) {
@@ -114,6 +126,7 @@ window.chrome.webview.addEventListener('message', (e) => {
       const firstFolder = document.getElementById("files-count").textContent;
       const secondFolder = document.getElementById("nameActivSidenavMenu").textContent;
       const pathFolderPreview = `https://${window.hostNameToFolderMapper}/${firstFolder}/${secondFolder}/${window.nameFolderPreview}`;
+
       // Добавление карточки
       addCard(dataConnection, pathFolderPreview);
       //addCardPlaice(dataConnection, pathFolderPreview);// добавление карточки на второе место
@@ -125,6 +138,28 @@ window.chrome.webview.addEventListener('message', (e) => {
       hideLoader(); // скрыть индикатор загрузки на всё окно
       showInfo(msg.validateResult);
       console.log("Превью не скачалось!");
+    }
+  }
+  // удаление карточки из галереи
+  else if (msg.type == 'send-result-delete-id') {
+    if (msg.result) {
+      console.log("Превью успешно удалено на сервере!");
+      const card = document.querySelector(`.gallery-card[data-id="${msg.id}"]`);
+
+      // удаление Id из списка
+      const index = window.listVideoId.findIndex(item => item === msg.id);
+      if (index !== -1) {
+        window.listVideoId.splice(index, 1);
+      }
+
+      // удаляем карточку из DOM
+      card.classList.add("fade");
+      setTimeout(() => {
+        card.remove();
+      }, 500);
+    }
+    else {
+      console.log("Не удалось удалить превью на сервере!");
     }
   }
   // отключение оверлея загрузки

@@ -1,10 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using System;
 using System.IO;
 using System.Net.Http;
-using System.Security.Policy;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using ViewMedia.DTO;
@@ -389,19 +386,57 @@ public partial class MainWindow : Window
                         );
                     break;
                 }
-            //case "fill-window-content":
-            //    {
-            //        var firstFolder = root.GetProperty("firstFolder").GetString() ?? "";
-            //        var secondFolder = root.GetProperty("secondFolder").GetString() ?? "";
-            //        var connectFilePath = System.IO.Path.Combine(rootContent, firstFolder + "/" + secondFolder + "/" + nameConnectionFileJson);
+            case "send-delete-id":
+                {
+                    var id = root.GetProperty("id").GetString() ?? "";
+                    var pathFileClient = root.GetProperty("pathConnectionFileJson").GetString() ?? "";
+                    var pathFileServer = pathFileClient.Replace("https://" + hostGallery, rootContent).Replace("/", "\\");
+                    
+                    // читаем файл
+                    var jsonServer = File.ReadAllText(pathFileServer);
 
+                    // десериализуем
+                    var videos = JsonSerializer.Deserialize<List<DataConnection>>(jsonServer);
 
+                    // удаляем нужную запись
+                    var video = videos.FirstOrDefault(v => v.VideoId == id);
+                    if (video != null)
+                    {
+                        videos.Remove(video);
+                    }
+                    else
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = false }) );
+                        return;
+                    }
 
-            //        Browser.CoreWebView2.PostWebMessageAsJson(
-            //            System.Text.Json.JsonSerializer.Serialize(new { type = "create-first-folder-restart" })
-            //            );
-            //        break;
-            //    }
+                    // сохраняем обратно
+                    var newJson = JsonSerializer.Serialize(videos, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    File.WriteAllText(pathFileServer, newJson);
+
+                    // удаление превью
+                    // получаем путь без последнего сегмента (получаем открытую папку)
+                    string directory = System.IO.Path.GetDirectoryName(pathFileServer);
+
+                    // добавляем нужный файл
+                    string newPath = System.IO.Path.Combine(directory, nameFolderPreview + '/' + video.PreviewName);
+                    try
+                    {
+                        if (File.Exists(newPath))
+                            File.Delete(newPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = false }));
+                        return;
+                    }
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = true, id }));
+                    break;
+                }
         }
     }
 

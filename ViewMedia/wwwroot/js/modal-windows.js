@@ -42,6 +42,47 @@ function confirmModal(text, nameButton = "Удалить") {
         modal.open();
     });
 }
+// Показать или заменить добавляемую карточку
+function confirmModalThree(text) {
+    return new Promise((resolve) => {
+
+        const modalEl = document.getElementById("three-button-modal");
+        const modal = M.Modal.getInstance(modalEl);
+
+        const textEl = document.getElementById("three-button-modal-text");
+        const cancelBtn = document.getElementById("three-button-cancel");
+        const showBtn = document.getElementById("three-button-show");
+        const okBtn = document.getElementById("three-button-ok");
+
+        textEl.innerHTML = text;
+
+        const cleanup = () => {
+          cancelBtn.onclick = null;
+          showBtn.onclick = null;
+          okBtn.onclick = null;
+        };
+
+        cancelBtn.onclick = () => {
+            cleanup();
+            modal.close();
+            resolve("cancel");
+        };
+
+        showBtn.onclick = () => {
+            cleanup();
+            modal.close();
+            resolve("show");
+        };
+
+        okBtn.onclick = () => {
+            cleanup();
+            modal.close();
+            resolve("ok");
+        };
+
+        modal.open();
+    });
+}
 // Создание и Переименовывание папки
 function openCreateFolderModal(existingFolderNames, modalEl, placeholder = false) {
   return new Promise((resolve) => {

@@ -46,9 +46,9 @@ contextMenu.addEventListener('click', async function (e) {
   const context = currentFileElement.dataset.context;
   const folderName = currentFileElement.textContent.trim();
 
-  console.log('Действие:', action);
-  console.log('context:', context);
-  console.log('Имя файла:', folderName);
+  // console.log('Действие:', action);
+  // console.log('context:', context);
+  // console.log('Имя файла:', folderName);
 
   if (context === 'parent-folder') {
     switch (action) {
@@ -87,6 +87,6 @@ document.addEventListener('click', function () {
 });
 
 // Закрытие меню при скролле
-window.addEventListener('scroll', function () {
+document.getElementById("view-window").addEventListener('scroll', function () {
   contextMenu.classList.remove('active');
 });
