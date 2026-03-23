@@ -1,6 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System.IO;
 using System.Net.Http;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
@@ -413,6 +414,7 @@ public partial class MainWindow : Window
                     // сохраняем обратно
                     var newJson = JsonSerializer.Serialize(videos, new JsonSerializerOptions
                     {
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                         WriteIndented = true
                     });
                     File.WriteAllText(pathFileServer, newJson);
