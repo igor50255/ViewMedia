@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using Serilog;
 using System.IO;
 using System.Net.Http;
 using System.Text.Encodings.Web;
@@ -73,7 +74,6 @@ public partial class MainWindow : Window
 
 
         Browser.CoreWebView2.Navigate($"https://{hostIndex}/index.html");
-
 
     }
 
@@ -375,10 +375,12 @@ public partial class MainWindow : Window
                             string res = DataConnectionFile.Save(fileConnectionPath, dataConnection);
 
                             //MessageBox.Show("Превью скачано");
+                            Log.Information($"Скачано превью: {pathVideo}, {dataConnection.PreviewName}");
                         }
                         else
                         {
                             MessageBox.Show("Не удалось скачать превью!");
+                            Log.Warning($"Ошибка превью: {pathVideo}");
                         }
                     }
 
@@ -428,11 +430,20 @@ public partial class MainWindow : Window
                     try
                     {
                         if (File.Exists(newPath))
+                        {
                             File.Delete(newPath);
+                            Log.Information($"Удалено превью: {video.Url}, {video.PreviewName}");
+                        }
+                        else
+                        {
+                            Log.Warning($"Ошибка удаленя превью. Не существует: {video.Url}, {video.PreviewName}.");
+                        }
+                            
                     }
                     catch (Exception ex)
                     {
                         Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = false }));
+                        Log.Warning($"Ошибка удаленя превью. Что-то идёт не так: {video.Url}, {video.PreviewName}.");
                         return;
                     }
 
