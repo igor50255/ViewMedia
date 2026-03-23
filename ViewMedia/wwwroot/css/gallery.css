@@ -5,7 +5,6 @@
 }
 
 * {
-  /* border-box: чтобы padding не влиял на расчёт ширины колонок */
   box-sizing: border-box;
 }
 
@@ -18,12 +17,21 @@
 }
 
 .gallery-card {
+  position: relative;
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible; /* было hidden */
   background: #181818;
   color: azure;
   box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
   min-width: 0;
+  transition: transform 0.2s ease;
+}
+
+/* Внутренний контейнер, который реально режет содержимое по скруглению */
+.gallery-card .gallery-thumb,
+.gallery-card .gallery-meta {
+  position: relative;
+  z-index: 1;
 }
 
 .gallery-thumb {
@@ -31,6 +39,8 @@
   width: 100%;
   background: #222;
   display: block;
+  overflow: hidden;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .gallery-thumb img {
@@ -44,6 +54,14 @@
   padding: 10px 12px 12px;
   display: grid;
   gap: 6px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: #181818;
+
+  transition: background-color 2.0s ease;
+}
+/* Hover на карточку → меняем meta */
+.gallery-card:hover .gallery-meta {
+  background-color: gray;
 }
 
 .gallery-title {
@@ -65,12 +83,28 @@
   pointer-events: none;
 }
 
-/* --- плавное исчезновение карточки --- */
+/* Обводка */
+.gallery-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 12px gray;
+  opacity: 0;
+  transition: opacity 2.0s ease;
+  pointer-events: none;
+}
+
+.gallery-card:hover::after {
+  opacity: 1;
+}
+
+/* --- плавное исчезновение карточки при удалении --- */
 .fade {
   opacity: 0;
   transition: opacity 0.8s ease;
 }
-/* плавное появление карточки при добавлении */
+/* --- плавное появление карточки при добавлении --- */
 .card-fade-in {
   animation: cardFadeIn 3s ease;
 }
@@ -83,3 +117,10 @@
     opacity: 1;
   }
 }
+
+
+
+
+
+
+
