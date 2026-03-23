@@ -54,8 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         initGallery(data, pathFolderPreview); // заполнение галереи картинками
         window.listVideoId = data.map(item => item.VideoId); // заполнение списка Id для избежания дублирования
-        console.log("Список listVideoId шт:" + window.listVideoId.length);
-        console.log(window.listVideoId);
+        // console.log("Список listVideoId шт:" + window.listVideoId.length);
+        // console.log(window.listVideoId);
+        // заполняем: Количество элементов в текущем окне
+        document.getElementById("numberPicturesCurrentWindow").textContent = window.listVideoId.length;
 
         // data.forEach(item => {
         //   console.log(item.PreviewName);
