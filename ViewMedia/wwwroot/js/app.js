@@ -133,6 +133,9 @@ window.chrome.webview.addEventListener('message', (e) => {
 
       // добавить VideoId в список загруженных видео ( в этом окне просмотра)
       window.listVideoId.push(dataConnection.VideoId);
+
+      // заполняем заново: Количество элементов в текущем окне
+      document.getElementById("numberPicturesCurrentWindow").textContent = window.listVideoId.length;
     }
     else {
       hideLoader(); // скрыть индикатор загрузки на всё окно
@@ -157,6 +160,9 @@ window.chrome.webview.addEventListener('message', (e) => {
       setTimeout(() => {
         card.remove();
       }, 500);
+
+      // заполняем заново: Количество элементов в текущем окне
+      document.getElementById("numberPicturesCurrentWindow").textContent = window.listVideoId.length;
     }
     else {
       console.log("Не удалось удалить превью на сервере!");
