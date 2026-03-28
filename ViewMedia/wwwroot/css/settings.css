@@ -1,0 +1,42 @@
+/* Перенос текста на другую строку */
+.collection .collection-item {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Настройка слайдера */
+/* --- Деления  --- */
+.range-wrapper {
+    position: relative;
+    padding: 0 10px;
+}
+/* цифры */
+.ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -10px;
+    font-size: 11px;
+    color: #888;
+}
+/* чёрточки */
+.ticks span::before {
+    content: '|';
+    display: block;
+    text-align: center;
+    color: #bbb;
+    margin-inline: 7px;
+}
+/* --- Убрать tooltip у слайдера --- */
+.thumb {
+    visibility: hidden !important;
+}
+
+/* Выбор браузера */
+.browser{
+    margin-right: 25px;
+}
+
+
+
+
+

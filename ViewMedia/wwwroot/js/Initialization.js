@@ -8,5 +8,5 @@ document.addEventListener("DOMContentLoaded", () => {
     opacity: 0.5,      // затемнение фона
     dismissible: true  // можно закрывать кликом вне окна
   });
-});
 
+});

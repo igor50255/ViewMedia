@@ -5,8 +5,17 @@ document.getElementById("btn-plus").addEventListener("click", async function () 
   const secondFolder = document.getElementById("nameActivSidenavMenu").textContent;
   console.log(firstFolder);
   console.log(secondFolder);
-  if (secondFolder == "") {
-    console.log("Папка для просмотра не выбрана");
+  if (firstFolder == "") {
+    console.log("Папка первого уровня для просмотра не выбрана");
+    document.getElementById("files-count").click();
+    return;
+  }
+  else if (secondFolder == "") {
+    console.log("Папка второго уровня для просмотра не выбрана");
+    // открыть меню-гамбургер
+    const menu = document.getElementById('mobile-menu');
+    const instance1 = M.Sidenav.getInstance(menu);
+    instance1.open();
     return;
   }
 
@@ -44,7 +53,7 @@ document.getElementById("btn-plus").addEventListener("click", async function () 
 
       // запуск скачивания превью
       startDownloadPreview(firstFolder, secondFolder);
-      
+
       // отправка запроса на удаление картинки-превью
       setTimeout(() => {
         const deleteId = { type: 'send-delete-id', id: Id, pathConnectionFileJson: window.pathConnectionFileJson };

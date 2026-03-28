@@ -19,18 +19,26 @@ contextPreviewMenu.addEventListener("click", function (e) {
   const id = currentContextCard.dataset.id;
 
   if (action === "open-folder") {
-    currentContextCard.style.width = "200px";
     console.log("Открыть папку для элемента с id:", id);
-    // тут ваша логика
+    // отправка запроса для открытия папки этой карточки 
+    const pathFolder = { type: 'open-card-folder', pachFolder: currentContextCard.dataset.src};
+    chrome.webview.postMessage(pathFolder);
   }
 
   if (action === "delete") {
     console.log("Удалить элемент с id:", id);
 
     // отправка запроса на удаление картинки-превью
-    const deleteId = { type: 'send-delete-id', id,  pathConnectionFileJson: window.pathConnectionFileJson };
+    const deleteId = { type: 'send-delete-id', id, pathConnectionFileJson: window.pathConnectionFileJson };
     chrome.webview.postMessage(deleteId);
+  }
 
+  if (action === "copy-url") {
+    copyToClipboard(currentContextCard.dataset.url);
+  }
+
+  if (action === "copy-name") {
+    copyToClipboard(currentContextCard.dataset.name);
   }
 
   // Закрытие меню

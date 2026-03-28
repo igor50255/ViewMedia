@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Serilog;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text.Encodings.Web;
@@ -111,6 +112,52 @@ public partial class MainWindow : Window
                     if (_isWpfFullscreen) ToggleWpfFullscreen();
                     break;
                 }
+            case "open-root-dir": // открыть папку проекта
+                {
+                    var path = Properties.Settings.Default.rootFolderPath;
+                    if (path == null) return;
+                    System.Diagnostics.Process.Start("explorer.exe", path);
+                    break;
+                }
+            case "open-card-folder": // открыть папку выбраной карточки-превью
+                {
+                    var path = root.GetProperty("pachFolder").GetString() ?? "3";
+                    var openPath = path.Split("preview")[0].Replace("https://" + hostGallery, rootContent);
+
+                    System.Diagnostics.Process.Start("explorer.exe", openPath.Replace('/', '\\'));
+                    break;
+                }
+            case "open-url-brouser": // открыть браузер ( по выбору) с видео по URL + в режиме инкогнито
+                {
+                    var openUrl = root.GetProperty("openUrl").GetString() ?? "https://example.com";
+                    int browserCode = Properties.Settings.Default.browserCode; // выбранный браузер
+                    bool incognito = Properties.Settings.Default.incognito; // режим инкогнито
+
+                    StartBrouser.Start(browserCode, incognito, openUrl);
+                    break;
+                }
+            case "get-actualy-browser": // Получение актуального выбора браузера и режима инкогнито
+                {
+                    int browserCode = Properties.Settings.Default.browserCode; // выбранный браузер
+                    bool incognito = Properties.Settings.Default.incognito; // режим инкогнито
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                          System.Text.Json.JsonSerializer.Serialize(new { type = "get-actualy-browser-answer", browserCode, incognito })
+                      );
+                    break;
+                }
+            case "save-change-browser": // Сохранить выбранный браузер и режим инкогнито
+                {
+                    // отправка на сохранение (если check = 1, то это изменения выбора браузера, если 2, то режима инкогнито)
+                    var check = root.GetProperty("check").GetInt32();
+                    var browser = root.GetProperty("browser").GetInt32();
+                    var incognito = root.GetProperty("incognito").GetBoolean();
+
+                    if(check == 1) Properties.Settings.Default.browserCode = browser;
+                    else if(check == 2) Properties.Settings.Default.incognito = incognito;
+                    Properties.Settings.Default.Save();
+                    break;
+                }
             case "restarting-application": // перезапуск приложения
                 {
                     // изменение пути к папке с контетом
@@ -118,6 +165,25 @@ public partial class MainWindow : Window
                     Properties.Settings.Default.Save();
 
                     Restart.RestartApplication();
+                    break;
+                }
+            case "get-size-card": // получение актуального размера карточек-превью в окне программы
+                {
+                    int sizeCard = Properties.Settings.Default.sizeCard;
+
+                    Browser.CoreWebView2.PostWebMessageAsJson(
+                          System.Text.Json.JsonSerializer.Serialize(new { type = "get-size-card-answer", sizeCard })
+                      );
+                    break;
+                }
+            case "save-size-card": // сохранить размер карточек-превью в окне программы
+                {
+                    var size = root.GetProperty("sizeCard").GetString() ?? "3";
+                    if(int.TryParse(size, out int s))
+                    {
+                        Properties.Settings.Default.sizeCard = s;
+                        Properties.Settings.Default.Save();
+                    }
                     break;
                 }
             case "get-path-content": // получить актуальный путь к папке с контентом
@@ -359,11 +425,10 @@ public partial class MainWindow : Window
 
                         string url = await CreatePreview.GetYoutubeThumbnailUrl(videoId); // получаем URL превью
 
-                        string title = await CreatePreview.GetYoutubeTitle(pathVideo);
-
-
                         if (url != null)
                         {
+                            string title = await CreatePreview.GetYoutubeTitle(pathVideo);
+
                             byte[] image = await client.GetByteArrayAsync(url);
                             var folderPath = System.IO.Path.Combine(contentPath, nameFolderPreview);
                             Directory.CreateDirectory(folderPath);
@@ -379,8 +444,7 @@ public partial class MainWindow : Window
                         }
                         else
                         {
-                            MessageBox.Show("Не удалось скачать превью!");
-                            Log.Warning($"Ошибка превью: {pathVideo}");
+                            validateResult = "Не удалось скачать превью!";
                         }
                     }
 

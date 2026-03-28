@@ -21,7 +21,7 @@ const files = [
 const MAX_FIRST_ROW = 9;
 
 // Создаёт карточку изображения
-function makeCard(src, name, id, animate = false) {
+function makeCard(src, name, url, id, animate = false) {
   const card = document.createElement("div");
   card.className = "gallery-card real";
 
@@ -31,6 +31,9 @@ function makeCard(src, name, id, animate = false) {
 
   // Сохраняем id в data-атрибуте
   card.dataset.id = id;
+  card.dataset.url = url;
+  card.dataset.name = name;
+  card.dataset.src = src;
 
   const a = document.createElement("a");
   a.className = "gallery-thumb";
@@ -74,10 +77,13 @@ function makeCard(src, name, id, animate = false) {
     menu.classList.add("active");
   });
 
+  // Клик по карточке (открыть в браузере)
   card.addEventListener("click", function (e) {
     e.preventDefault();
     const id = card.dataset.id;
     console.log("клик: " + id);
+    const openUrl = { type: 'open-url-brouser', openUrl: card.dataset.url};
+    chrome.webview.postMessage(openUrl);
   });
 
   return card;
@@ -169,7 +175,7 @@ function initGallery(data, pathFolderPreview) {
     const name = f.PreviewName.substring(0, f.PreviewName.lastIndexOf('.')) || f.PreviewName; // получаем имя без расширения
     const src = `${pathFolderPreview}/${encodeURIComponent(f.PreviewName)}`;
     const id = f.VideoId;
-    grid.appendChild(makeCard(src, name, id));
+    grid.appendChild(makeCard(src, name, f.Url, id));
   }
 
   // первый расчёт плейсхолдеров
@@ -191,7 +197,7 @@ function addCard(file, pathFolderPreview) {
   if (!grid) return;
   const name = file.PreviewName.substring(0, file.PreviewName.lastIndexOf('.')) || file.PreviewName; // получаем имя без расширения
   const src = `${pathFolderPreview}/${encodeURIComponent(file.PreviewName)}`;
-  grid.appendChild(makeCard(src, name, file.VideoId, true));
+  grid.appendChild(makeCard(src, name, file.Url, file.VideoId, true));
 
   syncPlaceholders();
 
@@ -203,24 +209,24 @@ function addCard(file, pathFolderPreview) {
 }
 
 // Добавление карточки на второе место
-function addCardPlaice(file, pathFolderPreview) {
-  const grid = document.getElementById("grid");
-  if (!grid) return;
+// function addCardPlaice(file, pathFolderPreview) {
+//   const grid = document.getElementById("grid");
+//   if (!grid) return;
 
-  const name = file.PreviewName.substring(0, file.PreviewName.lastIndexOf('.')) || file.PreviewName; // получаем имя без расширения
-  const src = `${pathFolderPreview}/${encodeURIComponent(file.PreviewName)}`;
-  const card = makeCard(src, name);
+//   const name = file.PreviewName.substring(0, file.PreviewName.lastIndexOf('.')) || file.PreviewName; // получаем имя без расширения
+//   const src = `${pathFolderPreview}/${encodeURIComponent(file.PreviewName)}`;
+//   const card = makeCard(src, name);
 
-  const second = grid.querySelectorAll(".gallery-card.real")[1];
+//   const second = grid.querySelectorAll(".gallery-card.real")[1];
 
-  if (second) {
-    grid.insertBefore(card, second);
-  } else {
-    grid.appendChild(card);
-  }
+//   if (second) {
+//     grid.insertBefore(card, second);
+//   } else {
+//     grid.appendChild(card);
+//   }
 
-  syncPlaceholders();
-}
+//   syncPlaceholders();
+// }
 
 // Плавная прокрутка в самый низ
 function smoothScrollTo(element, target, duration = 800) {
