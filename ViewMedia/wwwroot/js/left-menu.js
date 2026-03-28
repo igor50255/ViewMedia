@@ -68,7 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Закрываем меню
-    sidenavInstance.close();
+    // sidenavInstance.close();
+    setTimeout(() => sidenavInstance.close(), 100);
   });
 });
 

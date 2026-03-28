@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/left-menu.css">
     <link rel="stylesheet" href="css/list-files-collapsible.css">
     <link rel="stylesheet" href="css/custom-context-menu.css">
+    <link rel="stylesheet" href="css/settings.css">
     <title>Просмотр медиа на ПК</title>
 
 </head>
@@ -182,41 +183,18 @@
 
                             <!-- Основной текст -->
                             <p class="grey-text text-darken-3 center-align">
-                                <b>Приложение для просмотра моделей программы DazStudio</b>
+                                <b>Приложение для просмотра видео из Ютуба</b>
                             </p>
 
                             <ul class="collection" style="margin-top: 14px;">
                                 <li class="collection-item">
-                                    При старте программы вам предлагается выбрать папку для размещения контента. При
-                                    выборе
-                                    создаются рабочие папки — по названиям будет понятно, что и куда размещать.
-                                </li>
-
-                                <li class="collection-item">
-                                    Основной единицей является <b>папка</b>, названная <b>по имени модели</b>. В ней
-                                    уже
-                                    может быть архив и другая информация.
-                                </li>
-
-                                <li class="collection-item">
-                                    Для создания превью в папке должна быть хотя бы <b>одна картинка</b>.
-                                    Там будет создана папка <b>"preview"</b> и в неё добавится первая картинка из
-                                    папки
-                                    модели.
-                                    После создания, превью можно заменить вручную, но оставьте имя файла
-                                    <b>"0.*"</b>.
-                                    Если картинок нет — будет использована <b>дефолтная</b> картинка.
-                                </li>
-
-                                <li class="collection-item">
-                                    При клике на название модели, открывается папка этой модели в проводнике.
+                                    При старте программы вам предлагается выбрать папку для размещения контента.
                                 </li>
 
                                 <li class="collection-item">
                                     <b>Ctrl + D</b> — включает полноэкранный режим и выводит из него.
-                                    <b>Ctrl + Колёси мыши</b> — увеличивает и уменьшает размер картинок-превью в
-                                    окне
-                                    программы.
+                                    <b>Ctrl + Колёси мыши</b> — увеличивает и уменьшает размер элементов в окне
+                                    программы
                                 </li>
 
                                 <li class="collection-item">
@@ -225,49 +203,54 @@
                                 </li>
 
                                 <li class="collection-item">
-                                    Если при скролле тормозит отображение картинок — то Оптимизация 1 и 2 уменьшит
-                                    размер кртинок-превью.
-                                    <b>Внимание:</b> оптимизация может занять некоторое время!
-                                </li>
-                                <li class="collection-item">
-
-                                    <div class="row" style="margin-bottom:0;">
-                                        <div class="col s3">
-                                            <a id="opntimazation1" class="btn-small waves-effect waves-light"
-                                                style="width:100%;">
-                                                Оптимизация
-                                                1
-                                            </a>
-                                        </div>
-                                        <div class="col s3">
-                                            <a id="opntimazation2" class="btn-small waves-effect waves-light"
-                                                style="width:100%;">
-                                                Оптимизация
-                                                2
-                                            </a>
-                                        </div>
-                                        <div class="col s3">
-                                            <a id="opntimazation-refresh" class="btn-small waves-effect waves-light"
-                                                style="width:100%;">Отмена</a>
-                                        </div>
-                                        <div class="col s3">
-                                            <a id="opntimazation-delete" class="btn-small waves-effect waves-light"
-                                                style="width:100%;">Удалить</a>
+                                    <div>Размер карточек с превью</div>
+                                    <div class="range-wrapper">
+                                        <p class="range-field">
+                                            <input type="range" id="size-slider" min="1" max="5" step="1" />
+                                        </p>
+                                        <div class="ticks">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
                                         </div>
                                     </div>
                                 </li>
+                                <li class="collection-item">
+                                    <!-- Выбор браузера -->
+                                    <p style="margin-bottom: 10px;">Выбор браузера</p>
+
+                                    <label class="browser"><input name="browser" type="radio" value="0" checked /><span>По
+                                            умолчанию</span></label>
+                                    <label class="browser"><input name="browser" type="radio" value="1" /><span>Chrome</span></label>
+                                    <label class="browser"><input name="browser" type="radio" value="2" /><span>Edge</span></label>
+                                    <label class="browser"><input name="browser" type="radio" value="3" /><span>Opera</span></label>
+                                    <label class="browser"><input name="browser" type="radio" value="4" /><span>Firefox</span></label>
+
+                                    <!-- Инкогнито -->
+                                    <p style="margin-left: 3px;">
+                                        <label>
+                                            <input type="checkbox" id="incognito" />
+                                            <span>Инкогнито</span>
+                                        </label>
+                                    </p>
+                                </li>
                             </ul>
-
-
 
                             <!-- Быстрое действие -->
                             <div class="row" style="margin-bottom: 0;">
                                 <div class="col s12">
                                     <div class="card-panel deep-purple lighten-5" style="margin-top: 0;">
                                         <div class="valign-wrapper" style="gap: 10px;">
-                                            <i class="material-icons cyan-text text-darken-4">folder_open</i>
+                                            <i class="material-icons cyan-text text-darken-4 tooltipped open-root"
+                                                cursor="pointer" onclick="open_folder()" data-position="top"
+                                                data-tooltip="Открыть папку" style="cursor: pointer;">
+                                                folder_open
+                                            </i>
                                             <div class="valign-wrapper" style="flex:1; min-width:0; gap:10px; ">
-                                                <div id="path-content" class="black-text" style="
+                                                <div id="path-content" class="black-text tooltipped" data-position="top"
+                                                    style="
     font-weight:600;
     flex:1;
     min-width:0;              /* ✅ ключевое */
@@ -275,7 +258,7 @@
     text-overflow:ellipsis;   /* ✅ */
     white-space:nowrap;       /* ✅ */
     ">
-                                                    сдесь путь к папке с контентом
+                                                    здесь путь к папке с контентом
                                                 </div>
                                                 <a id="chengePathContent"
                                                     class="waves-effect waves-light btn-small cyan darken-4"
@@ -310,16 +293,17 @@
             <ul>
                 <li data-action="open-folder">Открыть папку</li>
                 <li data-action="delete">Удалить</li>
+                <li data-action="copy-url">Копировать ссылку</li>
+                <li data-action="copy-name">Копировать имя</li>
             </ul>
         </div>
-
-
 
 
         <script src="materialize/js/materialize.min.js"></script>
 
         <script src="js/globals.js"></script>
         <script src="js/app.js"></script>
+        <script src="js/clipboard-api.js"></script>
         <script src="js/overlay.js"></script>
         <script src="js/fullscreen.js"></script>
         <script src="js/Initialization.js"></script>

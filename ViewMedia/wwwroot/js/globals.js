@@ -4,5 +4,6 @@ window.hostNameToFolderMapper = "";
 window.nameConnectionFileJson = "";
 window.nameFolderPreview = "";
 window.nameFolderVideo = "";
+window.sizeCard = 1; // размер карточек превью
 
 window.pathConnectionFileJson = "";

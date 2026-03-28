@@ -51,6 +51,10 @@
   padding-right: 13px;
   padding-top: 3px;
 }
+/* Браузер заранее выделит ресурсы для анимации этого элемента */
+.sidenav {
+  will-change: transform;
+}
 /* кнопки переносим обратно в правую */
 .sidenav li{
   direction: ltr;

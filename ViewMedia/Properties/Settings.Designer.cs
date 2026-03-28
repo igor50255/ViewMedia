@@ -46,5 +46,41 @@ namespace ViewMedia.Properties {
                 this["rootFolderPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int sizeCard {
+            get {
+                return ((int)(this["sizeCard"]));
+            }
+            set {
+                this["sizeCard"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int browserCode {
+            get {
+                return ((int)(this["browserCode"]));
+            }
+            set {
+                this["browserCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool incognito {
+            get {
+                return ((bool)(this["incognito"]));
+            }
+            set {
+                this["incognito"] = value;
+            }
+        }
     }
 }

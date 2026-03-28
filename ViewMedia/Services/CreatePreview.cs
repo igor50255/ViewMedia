@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using Serilog;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace ViewMedia.Services
 {
@@ -44,12 +46,26 @@ namespace ViewMedia.Services
 
             foreach (var thumb in thumbs)
             {
-                string url = $"https://img.youtube.com/vi/{videoId}/{thumb}";
-
-                var response = await client.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                    return url;
+                try
+                {
+                    string url = $"https://img.youtube.com/vi/{videoId}/{thumb}";
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                        return url;
+                    // не 200 — пробуем следующий thumb
+                }
+                catch(HttpRequestException)
+                {
+                    MessageBox.Show("Не удалось соединиться с сервером!");
+                    Log.Error($"Не удалось соединиться с сервером!");
+                    return null; // нет сети — смысла продолжать нет
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Что-то идёт не так! См. логги!");
+                    Log.Error($"{ex}");
+                    return null; // нет сети — смысла продолжать нет
+                }
             }
 
             return null;

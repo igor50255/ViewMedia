@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const pathFolder = { type: 'get-path-content' };
   chrome.webview.postMessage(pathFolder);
 
+  // Получение актуального размера картинок в окне программы
+  const sizeCard = { type: 'get-size-card' };
+  chrome.webview.postMessage(sizeCard);
+
+  // Получение актуального выбора браузера и режима инкогнито
+  const browser = { type: 'get-actualy-browser' };
+  chrome.webview.postMessage(browser);
+
   // отправка запроса для получения первоначальных данных для заполнения списков выбора папки
   const pathFolders = { type: 'get-path-folders' };
   chrome.webview.postMessage(pathFolders);
@@ -12,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.chrome.webview.addEventListener('message', (e) => {
   const msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-  // отображение картинок превью контента
+  // отображение картинок-превью контента
   if (msg.type == 'images') {
     let images = msg.data;
     console.log(images); // проверка контента
@@ -31,6 +39,21 @@ window.chrome.webview.addEventListener('message', (e) => {
     window.nameFolderPreview = msg.nameFolderPreview;
     // имя папки для видео
     window.nameFolderVideo = msg.nameFolderVideo;
+  }
+  // Получение актуального размера картинок в окне программы
+  else if (msg.type == 'get-size-card-answer') {
+    window.sizeCard = msg.sizeCard;
+    var slider = document.getElementById('size-slider');
+    slider.value = window.sizeCard;
+    chengeSelectorSizeCard();// изменить селектор ширины в css
+  }
+  // Получение актуального выбора браузера и режима инкогнито
+  else if (msg.type == 'get-actualy-browser-answer') {
+    var brouser = msg.browserCode;
+    // Выбрать браузер 
+    document.querySelector(`input[name="browser"][value="${brouser}"]`).checked = true;
+    // Установить чекбокс
+    document.querySelector('#incognito').checked = msg.incognito;
   }
   // Получение массива папок и заполнение списков выбора
   else if (msg.type == 'set-path-folders') {
