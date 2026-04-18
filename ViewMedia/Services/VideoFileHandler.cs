@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Windows;
 using ViewMedia.DTO;
 
 namespace ViewMedia.Services
@@ -44,6 +45,28 @@ namespace ViewMedia.Services
 
             string updatedJson = JsonSerializer.Serialize(connections, new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true });
             await File.WriteAllTextAsync(jsonFilePath, updatedJson);
+        }
+
+        // Проиграть файл в плеере
+        public static async Task PlayVideoFileAsync(string jsonFilePath, string pathFolderVideo, string videoId)
+        {
+            string json = await File.ReadAllTextAsync(jsonFilePath);
+            var connections = JsonSerializer.Deserialize<List<DataConnection>>(json) ?? [];
+
+            int index = connections.FindIndex(c => c.VideoId == videoId);
+            if (index == -1)
+                throw new KeyNotFoundException($"VideoId '{videoId}' not found.");
+
+            string videoName = connections[index].VideoName;
+            if (string.IsNullOrEmpty(videoName))
+            {
+                MessageBox.Show("Видео отсутствует");
+                return;
+            }
+
+
+            string fullPath = Path.Combine(pathFolderVideo, videoName);
+            MessageBox.Show(fullPath);
         }
     }
 }
