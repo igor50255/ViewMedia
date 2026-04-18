@@ -138,6 +138,19 @@ public partial class MainWindow : Window
                     StartBrouser.Start(browserCode, incognito, openUrl);
                     break;
                 }
+            case "right-click-player": // воспроизвести видео, если оно существует
+                {
+                    var path = root.GetProperty("src").GetString() ?? "";
+                    var id = root.GetProperty("id").GetString() ?? "";
+
+                    var pathFolder = path.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
+                    var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
+
+                    await VideoFileHandler.PlayVideoFileAsync(pathJson, pathFolderVideo, id);
+
+                    break;
+                }
             case "get-actualy-browser": // Получение актуального выбора браузера и режима инкогнито
                 {
                     int browserCode = Properties.Settings.Default.browserCode; // выбранный браузер

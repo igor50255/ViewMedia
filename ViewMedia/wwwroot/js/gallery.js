@@ -72,18 +72,50 @@ function makeCard(src, name, url, id, animate = false) {
     currentContextCard = card;
 
     const menu = document.getElementById("preview-context-menu");
-    menu.style.left = `${e.clientX}px`;
-    menu.style.top = `${e.clientY}px`;
     menu.classList.add("active");
+
+    const menuRect = menu.getBoundingClientRect();
+    const menuWidth = menuRect.width || 0;
+    const menuHeight = menuRect.height || 0;
+
+    const padding = 32;
+
+    let x = e.clientX;
+    let y = e.clientY;
+
+    if (x + menuWidth > window.innerWidth - padding) {
+      x = window.innerWidth - menuWidth - padding;
+    }
+    if (y + menuHeight > window.innerHeight - padding) {
+      y = window.innerHeight - menuHeight - padding;
+    }
+
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
   });
 
-  // Клик по карточке (открыть в браузере)
+  // Клик по карточке
   card.addEventListener("click", function (e) {
     e.preventDefault();
+
+    // Определяем, по какой половине кликнули
+    const rect = card.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const halfWidth = rect.width / 2;
+
     const id = card.dataset.id;
-    console.log("клик: " + id);
-    const openUrl = { type: 'open-url-brouser', openUrl: card.dataset.url};
-    chrome.webview.postMessage(openUrl);
+
+    if (clickX < halfWidth) {
+      // Левая половина - открыть в браузере (прежнее действие)
+      console.log("клик по левой половине: " + id);
+      const openUrl = { type: 'open-url-brouser', openUrl: card.dataset.url};
+      chrome.webview.postMessage(openUrl);
+    } else {
+      // Правая половина - новое действие
+      console.log("клик по правой половине: " + id);
+      const playVideo = { type: 'right-click-player', src, id};
+      chrome.webview.postMessage(playVideo);
+    }
   });
 
   return card;
