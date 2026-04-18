@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using ViewMedia.DTO;
 using ViewMedia.Services;
 using ViewMedia.StartServices;
@@ -29,6 +30,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Loaded += MainWindow_Loaded;
+        
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -184,6 +186,43 @@ public partial class MainWindow : Window
                         Properties.Settings.Default.sizeCard = s;
                         Properties.Settings.Default.Save();
                     }
+                    break;
+                }
+            case "send-path-folder-video": // открыть окно для перетаскивания видео
+                {
+                    var path = root.GetProperty("src").GetString() ?? "";
+                    var id = root.GetProperty("id").GetString() ?? "";
+
+                    var pathFolder = path.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
+                    var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
+
+                    var win = new DropWindow(id, pathFolderVideo, pathJson);
+                    win.Owner = this;          // привязывает к главному окну
+                    win.Show();
+                    break;
+                }
+            case "send-path-folder-video-delete": // удалить видео-файл
+                {
+                    var path = root.GetProperty("src").GetString() ?? "";
+                    var id = root.GetProperty("id").GetString() ?? "";
+
+                    var pathFolder = path.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
+                    var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
+
+                    try
+                    {
+                        await VideoFileHandler.DeleteVideoFileAsync(pathJson, pathFolderVideo, id);
+                    }
+                    catch (Exception ex)
+                    {
+                        //MessageBox.Show("Ошибка при удалении видео: " + ex.Message);
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                           System.Text.Json.JsonSerializer.Serialize(new { type = "info-failed-video-delete", maessage = ex.Message.ToString() })
+                       );
+                    }
+  
                     break;
                 }
             case "get-path-content": // получить актуальный путь к папке с контентом
@@ -557,4 +596,5 @@ public partial class MainWindow : Window
         Browser.Focus();
         Keyboard.Focus(Browser);
     }
+
 }

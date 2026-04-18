@@ -21,7 +21,7 @@ contextPreviewMenu.addEventListener("click", function (e) {
   if (action === "open-folder") {
     console.log("Открыть папку для элемента с id:", id);
     // отправка запроса для открытия папки этой карточки 
-    const pathFolder = { type: 'open-card-folder', pachFolder: currentContextCard.dataset.src};
+    const pathFolder = { type: 'open-card-folder', pachFolder: currentContextCard.dataset.src };
     chrome.webview.postMessage(pathFolder);
   }
 
@@ -39,6 +39,18 @@ contextPreviewMenu.addEventListener("click", function (e) {
 
   if (action === "copy-name") {
     copyToClipboard(currentContextCard.dataset.name);
+  }
+
+  if (action === "upload-video") {
+    console.log("Загрузить видео!");
+    const pathFolderVideo = { type: 'send-path-folder-video', src:  currentContextCard.dataset.src, id: currentContextCard.dataset.id};
+    chrome.webview.postMessage(pathFolderVideo);
+  }
+
+  if (action === "delete-video") {
+    console.log("Удалить видео!");
+    const pathFolderVideo = { type: 'send-path-folder-video-delete', src:  currentContextCard.dataset.src, id: currentContextCard.dataset.id};
+    chrome.webview.postMessage(pathFolderVideo);
   }
 
   // Закрытие меню

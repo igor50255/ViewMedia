@@ -55,6 +55,10 @@ window.chrome.webview.addEventListener('message', (e) => {
     // Установить чекбокс
     document.querySelector('#incognito').checked = msg.incognito;
   }
+  // Не успешное удаление видео
+  else if (msg.type == 'info-failed-video-delete') {
+    showInfo(msg.maessage, "Ошибка при удалении видео");
+  }
   // Получение массива папок и заполнение списков выбора
   else if (msg.type == 'set-path-folders') {
     let directories = msg.pathFolders;
