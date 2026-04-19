@@ -48,6 +48,8 @@ namespace ViewMedia.Services
             await File.WriteAllTextAsync(jsonFilePath, updatedJson);
         }
 
+        private static Process _playerProcess;
+
         // Проиграть файл в плеере
         public static async Task PlayVideoFileAsync(string jsonFilePath, string pathFolderVideo, string videoId)
         {
@@ -67,13 +69,20 @@ namespace ViewMedia.Services
 
             string fullPath = Path.Combine(pathFolderVideo, videoName);
 
+            // Закрываем предыдущий процесс (предыдущее окно плеера), если он ещё работает
+            if (_playerProcess != null && !_playerProcess.HasExited)
+            {
+                _playerProcess.Kill();
+                _playerProcess.WaitForExit();
+            }
+
             string vplayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "VPlay", "bin", "Debug", "net8.0-windows", "VPlay.exe");
             if (!File.Exists(vplayPath))
             {
                 vplayPath = "VPlay";
             }
 
-            Process.Start(new ProcessStartInfo
+            _playerProcess = Process.Start(new ProcessStartInfo
             {
                 FileName = vplayPath,
                 Arguments = $"\"{fullPath}\"",
