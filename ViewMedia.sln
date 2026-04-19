@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewMedia", "ViewMedia\ViewMedia.csproj", "{84C440DE-7A42-443B-8C2E-493B9517E5CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPlay", "VPlay\VPlay.csproj", "{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{84C440DE-7A42-443B-8C2E-493B9517E5CE}.Release|x64.Build.0 = Release|Any CPU
 		{84C440DE-7A42-443B-8C2E-493B9517E5CE}.Release|x86.ActiveCfg = Release|Any CPU
 		{84C440DE-7A42-443B-8C2E-493B9517E5CE}.Release|x86.Build.0 = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Debug|x86.Build.0 = Debug|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|x64.Build.0 = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{8DAA9B78-3610-43D8-8582-5FAC1C4981FA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
