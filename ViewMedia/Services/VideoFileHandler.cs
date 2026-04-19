@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.Diagnostics;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
@@ -64,9 +65,20 @@ namespace ViewMedia.Services
                 return;
             }
 
-
             string fullPath = Path.Combine(pathFolderVideo, videoName);
-            MessageBox.Show(fullPath);
+
+            string vplayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "VPlay", "bin", "Debug", "net8.0-windows", "VPlay.exe");
+            if (!File.Exists(vplayPath))
+            {
+                vplayPath = "VPlay";
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = vplayPath,
+                Arguments = $"\"{fullPath}\"",
+                UseShellExecute = false
+            });
         }
     }
 }

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>plair_rounded.ico</ApplicationIcon>
+    <AssemblyName>VPlay</AssemblyName>
+    <RootNamespace>VPlay</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WebView2 NuGet -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
+  </ItemGroup>
+
+  <!-- Копируем player.html рядом с exe -->
+  <ItemGroup>
+    <Content Include="plair_rounded.ico" />
+    <Content Include="player.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
