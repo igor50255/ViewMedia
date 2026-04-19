@@ -43,4 +43,17 @@
 	  <Content Include="Resources\viewfilm.ico" />
 	</ItemGroup>
 
+	<Target Name="BuildAndCopyVPlay" AfterTargets="Build">
+		<Exec Command="dotnet build &quot;$(SolutionDir)VPlay\VPlay.csproj&quot; --configuration $(Configuration)" />
+
+		<ItemGroup>
+			<VPlayFiles Include="$(SolutionDir)VPlay\bin\$(Configuration)\net8.0-windows\**\*" />
+		</ItemGroup>
+
+		<Copy
+		  SourceFiles="@(VPlayFiles)"
+		  DestinationFiles="@(VPlayFiles->'$(OutputPath)VPlay\%(RecursiveDir)%(Filename)%(Extension)')"
+  />
+	</Target>
+
 </Project>

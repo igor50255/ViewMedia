@@ -79,13 +79,8 @@ namespace ViewMedia.Services
                 _playerProcess.WaitForExit();
             }
 
-            string vplayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "VPlay", "bin", "Debug", "net8.0-windows", "VPlay.exe");
-            if (!File.Exists(vplayPath))
-            {
-                // Если проект не собран, то собираем
-                ShowLoadingNotification(); // показываем уведомление
-                await EnsurePlayerBuiltAsync(vplayPath);
-            }
+            string vplayPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VPlay", "VPlay.exe");
+ 
             if (!File.Exists(vplayPath))
             {
                 MessageBox.Show("Не удалось найти или собрать плеер VPlay.");
@@ -100,62 +95,8 @@ namespace ViewMedia.Services
             });
         }
 
-        // Сборка проекта VPlay
-        private static async Task EnsurePlayerBuiltAsync(string vplayPath)
-        {
-            if (!File.Exists(vplayPath))
-            {
-                await Task.Run(() =>
-                {
-                    var buildProcess = Process.Start(new ProcessStartInfo
-                    {
-                        FileName = "dotnet",
-                        Arguments = $"build \"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "VPlay")}\" --configuration Debug",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    });
-                    buildProcess.WaitForExit();
-                });
-            }
-        }
+        
 
-        // Кастомное окно, которое закроется само через 5 секунд
-        private static void ShowLoadingNotification()
-        {
-            var popup = new Window
-            {
-                Title = "",
-                Width = 300,
-                Height = 100,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                WindowStyle = WindowStyle.None,
-                ResizeMode = ResizeMode.NoResize,
-                Topmost = true,
-                Background = new SolidColorBrush(Color.FromRgb(45, 45, 48)),
-                Content = new TextBlock
-                {
-                    Text = "⏳ Первая загрузка плеера...",
-                    Foreground = Brushes.White,
-                    FontSize = 16,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                }
-            };
-
-            popup.Show();
-
-            var timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(5)
-            };
-            timer.Tick += (s, e) =>
-            {
-                timer.Stop();
-                popup.Close();
-            };
-            timer.Start();
-        }
+        
     }
 }
