@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\viewfilm.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,10 @@
 		<Content Include="wwwroot\**\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\viewfilm.ico" />
 	</ItemGroup>
 
 </Project>
