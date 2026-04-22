@@ -94,28 +94,36 @@ function makeCard(src, name, url, id, animate = false) {
     menu.style.top = `${y}px`;
   });
 
-  // Клик по карточке
-  card.addEventListener("click", function (e) {
+  // Клик по картинке — левая/правая часть
+  img.addEventListener("click", function (e) {
     e.preventDefault();
+    e.stopPropagation();
 
-    // Определяем, по какой половине кликнули
-    const rect = card.getBoundingClientRect();
+    const rect = img.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const halfWidth = rect.width / 2;
 
-    const id = card.dataset.id;
-
     if (clickX < halfWidth) {
-      // Левая половина - открыть в браузере (прежнее действие)
-      console.log("клик по левой половине: " + id);
-      const openUrl = { type: 'open-url-brouser', openUrl: card.dataset.url};
+      // Левая часть — открыть в браузере
+      console.log("клик по картинке (левая часть): " + id);
+      const openUrl = { type: 'open-url-brouser', openUrl: card.dataset.url };
       chrome.webview.postMessage(openUrl);
     } else {
-      // Правая половина - новое действие
-      console.log("клик по правой половине: " + id);
-      const playVideo = { type: 'right-click-player', src, id};
+      // Правая часть — запустить плеер
+      console.log("клик по картинке (правая часть): " + id);
+      const playVideo = { type: 'right-click-player', src, id };
       chrome.webview.postMessage(playVideo);
     }
+  });
+
+  // Клик по нижнему блоку (meta) — третье действие
+  meta.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("клик по нижнему блоку: " + id);
+    // Здесь будет third-click действие
+    const thirdClick = { type: 'third-click', id: id, name: name, url: card.dataset.url };
+    chrome.webview.postMessage(thirdClick);
   });
 
   return card;
