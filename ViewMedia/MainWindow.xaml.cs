@@ -529,17 +529,32 @@ public partial class MainWindow : Window
                     // десериализуем
                     var videos = JsonSerializer.Deserialize<List<DataConnection>>(jsonServer);
 
-                    // удаляем нужную запись
+                    // находим нужную запись
                     var video = videos.FirstOrDefault(v => v.VideoId == id);
-                    if (video != null)
-                    {
-                        videos.Remove(video);
-                    }
-                    else
+                    if (video == null)
                     {
                         Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = false }) );
                         return;
                     }
+
+                    // получаем путь без последнего сегмента (получаем открытую папку)
+                    string directory = System.IO.Path.GetDirectoryName(pathFileServer);
+
+                    // удаление видео (делаем вначале, пока json ещё содержит данные)
+                    try
+                    {
+                        string pathFolderVideo = Path.Combine(directory, nameFolderVideo);
+                        await VideoFileHandler.DeleteVideoFileAsync(pathFileServer, pathFolderVideo, id);
+                        Log.Information($"Удалено видео: {video.VideoId}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning($"Ошибка удаления видео: {ex.Message}");
+                        // Продолжаем выполнение - видео может не существовать
+                    }
+
+                    // удаляем нужную запись из списка
+                    videos.Remove(video);
 
                     // сохраняем обратно
                     var newJson = JsonSerializer.Serialize(videos, new JsonSerializerOptions
@@ -550,10 +565,6 @@ public partial class MainWindow : Window
                     File.WriteAllText(pathFileServer, newJson);
 
                     // удаление превью
-                    // получаем путь без последнего сегмента (получаем открытую папку)
-                    string directory = System.IO.Path.GetDirectoryName(pathFileServer);
-
-                    // добавляем нужный файл
                     string newPath = System.IO.Path.Combine(directory, nameFolderPreview + '/' + video.PreviewName);
                     try
                     {
@@ -612,6 +623,53 @@ public partial class MainWindow : Window
 
                     Log.Information($"Удалена ссылка: {video.Url} для видео {video.VideoId}");
                     Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "delete-url-result", result = true, id }));
+                    break;
+                }
+            case "save-video":
+                {
+                    var src = root.GetProperty("src").GetString() ?? "";
+                    var id = root.GetProperty("id").GetString() ?? "";
+                    
+                    var pathFolder = src.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
+                    var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
+
+                    try
+                    {
+                        string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                        
+                        var jsonContent = File.ReadAllText(pathJson);
+                        var connections = JsonSerializer.Deserialize<List<DataConnection>>(jsonContent) ?? [];
+                        int index = connections.FindIndex(c => c.VideoId == id);
+                        if (index == -1)
+                        {
+                            MessageBox.Show("Видео не найдено");
+                            return;
+                        }
+                        
+                        string videoName = connections[index].VideoName;
+                        if (string.IsNullOrEmpty(videoName))
+                        {
+                            MessageBox.Show("Видео отсутствует");
+                            return;
+                        }
+                        
+                        string sourcePath = Path.Combine(pathFolderVideo, videoName);
+                        string destPath = Path.Combine(downloadsPath, videoName);
+                        
+                        File.Copy(sourcePath, destPath, true);
+                        
+                        // Устанавливаем текущую дату для файла (чтобы он появился вверху списка)
+                        File.SetLastWriteTime(destPath, DateTime.Now);
+                        
+                        Log.Information($"Видео сохранено в Загрузки: {videoName}");
+                        MessageBox.Show($"Видео сохранено в папку Загрузки: {videoName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning($"Ошибка сохранения видео: {ex.Message}");
+                        MessageBox.Show($"Ошибка сохранения видео: {ex.Message}");
+                    }
                     break;
                 }
         }
