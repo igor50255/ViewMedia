@@ -578,6 +578,42 @@ public partial class MainWindow : Window
                     Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "send-result-delete-id", result = true, id }));
                     break;
                 }
+            case "delete-url":
+                {
+                    var id = root.GetProperty("id").GetString() ?? "";
+                    var pathFileClient = root.GetProperty("pathConnectionFileJson").GetString() ?? "";
+                    var pathFileServer = pathFileClient.Replace("https://" + hostGallery, rootContent).Replace("/", "\\");
+                    
+                    // читаем файл
+                    var jsonServer = File.ReadAllText(pathFileServer);
+
+                    // десериализуем
+                    var videos = JsonSerializer.Deserialize<List<DataConnection>>(jsonServer);
+
+                    // находим нужную запись
+                    var video = videos.FirstOrDefault(v => v.VideoId == id);
+                    if (video == null)
+                    {
+                        Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "delete-url-result", result = false }));
+                        return;
+                    }
+
+                    // обнуляем Url
+                    int index = videos.FindIndex(v => v.VideoId == id);
+                    videos[index] = videos[index] with { Url = "" };
+
+                    // сохраняем обратно
+                    var newJson = JsonSerializer.Serialize(videos, new JsonSerializerOptions
+                    {
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        WriteIndented = true
+                    });
+                    File.WriteAllText(pathFileServer, newJson);
+
+                    Log.Information($"Удалена ссылка: {video.Url} для видео {video.VideoId}");
+                    Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "delete-url-result", result = true, id }));
+                    break;
+                }
         }
     }
 

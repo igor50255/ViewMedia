@@ -53,6 +53,12 @@ contextPreviewMenu.addEventListener("click", function (e) {
     chrome.webview.postMessage(pathFolderVideo);
   }
 
+  if (action === "delete-url") {
+    console.log("Удалить ссылку!");
+    const deleteUrlData = { type: 'delete-url', id: currentContextCard.dataset.id, pathConnectionFileJson: window.pathConnectionFileJson};
+    chrome.webview.postMessage(deleteUrlData);
+  }
+
   // Закрытие меню
   contextPreviewMenu.classList.remove("active");
 });
