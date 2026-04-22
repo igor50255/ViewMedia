@@ -70,6 +70,24 @@ window.chrome.webview.addEventListener('message', (e) => {
       }
     }
   }
+  // Результат удаления ссылки
+  else if (msg.type == 'delete-url-result') {
+    if (msg.result) {
+      console.log("Ссылка удалена для карточки:", msg.id);
+      const card = document.querySelector(`.gallery-card[data-id="${msg.id}"]`);
+      if (card) {
+        // Обнуляем Url в карточке
+        card.dataset.url = "";
+        // Скрываем индикатор url (левый индикатор)
+        const indicatorLeft = card.querySelector('.card-indicator-left');
+        if (indicatorLeft) {
+          indicatorLeft.classList.add('hidden');
+        }
+      }
+    } else {
+      console.error("Не удалось удалить ссылку");
+    }
+  }
   // Успешная загрузка видео - показать индикатор
   else if (msg.type == 'video-uploaded') {
     console.log("Видео загружено, показываем индикатор");
