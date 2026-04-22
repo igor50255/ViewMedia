@@ -131,9 +131,16 @@ public partial class MainWindow : Window
                 }
             case "open-url-brouser": // открыть браузер ( по выбору) с видео по URL + в режиме инкогнито
                 {
-                    var openUrl = root.GetProperty("openUrl").GetString() ?? "https://example.com";
-                    int browserCode = Properties.Settings.Default.browserCode; // выбранный браузер
-                    bool incognito = Properties.Settings.Default.incognito; // режим инкогнито
+                    var openUrl = root.GetProperty("openUrl").GetString() ?? "";
+                    
+                    if (string.IsNullOrWhiteSpace(openUrl))
+                    {
+                        MessageBox.Show("Ссылка на контент отсутствует!");
+                        break;
+                    }
+                    
+                    int browserCode = Properties.Settings.Default.browserCode;
+                    bool incognito = Properties.Settings.Default.incognito;
 
                     StartBrouser.Start(browserCode, incognito, openUrl);
                     break;
