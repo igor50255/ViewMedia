@@ -21,7 +21,7 @@ const files = [
 const MAX_FIRST_ROW = 9;
 
 // Создаёт карточку изображения
-function makeCard(src, name, url, id, animate = false) {
+function makeCard(src, name, url, id, videoName = "", animate = false) {
   const card = document.createElement("div");
   card.className = "gallery-card real";
 
@@ -34,6 +34,7 @@ function makeCard(src, name, url, id, animate = false) {
   card.dataset.url = url;
   card.dataset.name = name;
   card.dataset.src = src;
+  card.dataset.videoName = videoName;
 
   const a = document.createElement("a");
   a.className = "gallery-thumb";
@@ -48,13 +49,19 @@ function makeCard(src, name, url, id, animate = false) {
 
   a.appendChild(img);
 
-  // Индикатор для левой части (браузер)
+  // Индикатор для левой части (браузер) - показывать только если Url не пустой
   const indicatorLeft = document.createElement("div");
   indicatorLeft.className = "card-indicator card-indicator-left";
+  if (!url || url.trim() === "") {
+    indicatorLeft.classList.add("hidden");
+  }
 
-  // Индикатор для правой части (плеер)
+  // Индикатор для правой части (плеер) - показывать только если VideoName не пустой
   const indicatorRight = document.createElement("div");
   indicatorRight.className = "card-indicator card-indicator-right";
+  if (!videoName || videoName.trim() === "") {
+    indicatorRight.classList.add("hidden");
+  }
 
   a.appendChild(indicatorLeft);
   a.appendChild(indicatorRight);
@@ -65,6 +72,7 @@ function makeCard(src, name, url, id, animate = false) {
   const title = document.createElement("div");
   title.className = "gallery-title";
   title.textContent = name;
+  title.style.cursor = "pointer";
 
   meta.appendChild(title);
 
@@ -122,12 +130,21 @@ function makeCard(src, name, url, id, animate = false) {
     }
   });
 
-  // Клик по нижнему блоку (meta) — третье действие
+  // Клик по названию — третье действие
+  title.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("клик по названию: " + id);
+    // Здесь будет third-click действие
+    const thirdClick = { type: 'third-click', id: id, name: name, url: card.dataset.url };
+    chrome.webview.postMessage(thirdClick);
+  });
+
+  // Клик по нижнему блоку (meta) — также third-click действие (для совместимости)
   meta.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     console.log("клик по нижнему блоку: " + id);
-    // Здесь будет third-click действие
     const thirdClick = { type: 'third-click', id: id, name: name, url: card.dataset.url };
     chrome.webview.postMessage(thirdClick);
   });
@@ -221,7 +238,8 @@ function initGallery(data, pathFolderPreview) {
     const name = f.PreviewName.substring(0, f.PreviewName.lastIndexOf('.')) || f.PreviewName; // получаем имя без расширения
     const src = `${pathFolderPreview}/${encodeURIComponent(f.PreviewName)}`;
     const id = f.VideoId;
-    grid.appendChild(makeCard(src, name, f.Url, id));
+    const videoName = f.VideoName || "";
+    grid.appendChild(makeCard(src, name, f.Url, id, videoName));
   }
 
   // первый расчёт плейсхолдеров
@@ -243,7 +261,8 @@ function addCard(file, pathFolderPreview) {
   if (!grid) return;
   const name = file.PreviewName.substring(0, file.PreviewName.lastIndexOf('.')) || file.PreviewName; // получаем имя без расширения
   const src = `${pathFolderPreview}/${encodeURIComponent(file.PreviewName)}`;
-  grid.appendChild(makeCard(src, name, file.Url, file.VideoId, true));
+  const videoName = file.VideoName || "";
+  grid.appendChild(makeCard(src, name, file.Url, file.VideoId, videoName, true));
 
   syncPlaceholders();
 
