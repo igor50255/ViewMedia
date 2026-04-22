@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
 using ViewMedia.DTO;
 using ViewMedia.Services;
 
@@ -19,13 +20,15 @@ namespace ViewMedia
         string id;
         string pathFolderVideo;
         string pathJson;
+        CoreWebView2 browser;
 
-        public DropWindow(string id, string pathFolderVideo, string pathJson)
+        public DropWindow(string id, string pathFolderVideo, string pathJson, CoreWebView2 browser)
         {
             InitializeComponent();
             this.id = id;
             this.pathFolderVideo = pathFolderVideo;
             this.pathJson = pathJson;
+            this.browser = browser;
         }
 
         // --- Перетаскивание окна ---
@@ -135,7 +138,11 @@ namespace ViewMedia
                 DropLabel.Text = "✓ Готово!";
                 // добавить запись в json о новом видео
                 await VideoFileHandler.UpdateVideoNameAsync(pathJson, id, fileName);
-                //MessageBox.Show("Файл успешно скопирован в папку video.");
+                
+                // Отправляем сообщение об успешной загрузке видео
+                browser.PostWebMessageAsJson(
+                    System.Text.Json.JsonSerializer.Serialize(new { type = "video-uploaded", id })
+                );
             }
             catch (IOException ex)
             {
