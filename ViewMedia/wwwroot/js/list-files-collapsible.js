@@ -39,6 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // tooltip заголовка
         headerTextType.setAttribute("data-tooltip", typeModel);
 
+        // очищаем окно от контента
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+
+        // очищаем список id видео
+        window.listVideoId = [];
+
+        // обновляем счётчик карточек
+        document.getElementById("numberPicturesCurrentWindow").textContent = "0";
+
         // отправка запроса для получения списка папкок в кликнутой папке
         const pathFolders = { type: 'get-path-second-folders', folder: typeModel };
         chrome.webview.postMessage(pathFolders);
