@@ -48,6 +48,17 @@ function makeCard(src, name, url, id, animate = false) {
 
   a.appendChild(img);
 
+  // Индикатор для левой части (браузер)
+  const indicatorLeft = document.createElement("div");
+  indicatorLeft.className = "card-indicator card-indicator-left";
+
+  // Индикатор для правой части (плеер)
+  const indicatorRight = document.createElement("div");
+  indicatorRight.className = "card-indicator card-indicator-right";
+
+  a.appendChild(indicatorLeft);
+  a.appendChild(indicatorRight);
+
   const meta = document.createElement("div");
   meta.className = "gallery-meta";
 
@@ -55,12 +66,7 @@ function makeCard(src, name, url, id, animate = false) {
   title.className = "gallery-title";
   title.textContent = name;
 
-  const sub = document.createElement("div");
-  sub.className = "gallery-sub";
-  sub.textContent = "16:9 · cover";
-
   meta.appendChild(title);
-  meta.appendChild(sub);
 
   card.appendChild(a);
   card.appendChild(meta);
