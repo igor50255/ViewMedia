@@ -217,7 +217,7 @@ public partial class MainWindow : Window
                     var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
                     var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
 
-                    var win = new DropWindow(id, pathFolderVideo, pathJson);
+                    var win = new DropWindow(id, pathFolderVideo, pathJson, Browser.CoreWebView2);
                     win.Owner = this;          // привязывает к главному окну
                     win.Show();
                     break;
@@ -234,6 +234,11 @@ public partial class MainWindow : Window
                     try
                     {
                         await VideoFileHandler.DeleteVideoFileAsync(pathJson, pathFolderVideo, id);
+                        
+                        // Отправляем сообщение об успешном удалении видео
+                        Browser.CoreWebView2.PostWebMessageAsJson(
+                            System.Text.Json.JsonSerializer.Serialize(new { type = "video-deleted", id })
+                        );
                     }
                     catch (Exception ex)
                     {

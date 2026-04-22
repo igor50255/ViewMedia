@@ -59,6 +59,28 @@ window.chrome.webview.addEventListener('message', (e) => {
   else if (msg.type == 'info-failed-video-delete') {
     showInfo(msg.maessage, "Ошибка при удалении видео");
   }
+  // Успешное удаление видео - скрыть индикатор
+  else if (msg.type == 'video-deleted') {
+    console.log("Видео удалено, скрываем индикатор");
+    const card = document.querySelector(`.gallery-card[data-id="${msg.id}"]`);
+    if (card) {
+      const indicator = card.querySelector('.card-indicator-right');
+      if (indicator) {
+        indicator.classList.add('hidden');
+      }
+    }
+  }
+  // Успешная загрузка видео - показать индикатор
+  else if (msg.type == 'video-uploaded') {
+    console.log("Видео загружено, показываем индикатор");
+    const card = document.querySelector(`.gallery-card[data-id="${msg.id}"]`);
+    if (card) {
+      const indicator = card.querySelector('.card-indicator-right');
+      if (indicator) {
+        indicator.classList.remove('hidden');
+      }
+    }
+  }
   // Получение массива папок и заполнение списков выбора
   else if (msg.type == 'set-path-folders') {
     let directories = msg.pathFolders;
