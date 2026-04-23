@@ -572,6 +572,18 @@ public partial class MainWindow : Window
                     });
                     File.WriteAllText(pathFileServer, newJson);
 
+                    // удаление файла заметки
+                    string notePath = System.IO.Path.Combine(directory, nameFolderNotes + '/' + video.VideoId + ".txt");
+                    try
+                    {
+                        File.Delete(notePath); // если файла нет — просто ничего не происходит
+                        Log.Information($"Удалена заметка: {video.VideoId}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, $"Ошибка при удалении заметки: {video.VideoId}");
+                    }
+
                     // удаление превью
                     string newPath = System.IO.Path.Combine(directory, nameFolderPreview + '/' + video.PreviewName);
                     try
