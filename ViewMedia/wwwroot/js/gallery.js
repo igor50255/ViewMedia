@@ -72,8 +72,8 @@ function makeCard(src, name, url, id, videoName = "", animate = false) {
   const title = document.createElement("div");
   title.className = "gallery-title";
   title.textContent = name;
-  title.style.cursor = "pointer";
 
+  meta.style.cursor = "pointer";
   meta.appendChild(title);
 
   card.appendChild(a);
@@ -136,7 +136,7 @@ function makeCard(src, name, url, id, videoName = "", animate = false) {
     e.stopPropagation();
     console.log("клик по названию: " + id);
     // Здесь будет third-click действие
-    const thirdClick = { type: 'third-click', id: id, name: name, url: card.dataset.url };
+    const thirdClick = { type: 'third-click', id: id, name: name, src: card.dataset.src };
     chrome.webview.postMessage(thirdClick);
   });
 
@@ -145,7 +145,7 @@ function makeCard(src, name, url, id, videoName = "", animate = false) {
     e.preventDefault();
     e.stopPropagation();
     console.log("клик по нижнему блоку: " + id);
-    const thirdClick = { type: 'third-click', id: id, name: name, url: card.dataset.url };
+    const thirdClick = { type: 'third-click', id: id, name: name, src: card.dataset.src };
     chrome.webview.postMessage(thirdClick);
   });
 
