@@ -26,6 +26,7 @@ public partial class MainWindow : Window
     string nameConnectionFileJson = "connection.json";
     string nameFolderPreview = "preview";
     string nameFolderVideo = "video";
+    string nameFolderNotes = "notes";
     public MainWindow()
     {
         InitializeComponent();
@@ -338,6 +339,7 @@ public partial class MainWindow : Window
                     Directory.CreateDirectory(createFolderPath);
                     Directory.CreateDirectory(Path.Combine(createFolderPath, nameFolderPreview));// папка для превью
                     Directory.CreateDirectory(Path.Combine(createFolderPath, nameFolderVideo));// папка для видео
+                    Directory.CreateDirectory(Path.Combine(createFolderPath, nameFolderNotes));// папка для заметок
                     var jsonEmpty = JsonSerializer.Serialize(new List<object>());
                     File.WriteAllText(Path.Combine(createFolderPath, nameConnectionFileJson), jsonEmpty);// файл json, для хранения данных о связи видео и превью
                     // получаем массив папок в выбранной директории (только имена)
@@ -502,6 +504,12 @@ public partial class MainWindow : Window
                             var fileConnectionPath = System.IO.Path.Combine(contentPath, nameConnectionFileJson);
                             dataConnection = new DataConnection(videoId, pathVideo, $"{CreatePreview.SanitizeFileName(title)}.jpg", "", DateTime.Now);
                             string res = DataConnectionFile.Save(fileConnectionPath, dataConnection);
+
+                            // Создаём txt-файл с описанием карточки
+                            var notesFolder = Path.Combine(contentPath, nameFolderNotes);
+                            Directory.CreateDirectory(notesFolder);
+                            var notePath = Path.Combine(notesFolder, $"{videoId}.txt");
+                            File.WriteAllText(notePath, title);
 
                             //MessageBox.Show("Превью скачано");
                             Log.Information($"Скачано превью: {pathVideo}, {dataConnection.PreviewName}");
@@ -670,6 +678,36 @@ public partial class MainWindow : Window
                         Log.Warning($"Ошибка сохранения видео: {ex.Message}");
                         MessageBox.Show($"Ошибка сохранения видео: {ex.Message}");
                     }
+                    break;
+                }
+            case "third-click": // открыть заметку в блокноте
+                {
+                    var id = root.GetProperty("id").GetString() ?? "";
+                    var src = root.GetProperty("src").GetString() ?? "";
+                    
+                    if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(src))
+                    {
+                        MessageBox.Show("Недостаточно данных для открытия заметки");
+                        break;
+                    }
+                    
+                    var pathFolder = src.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var notePath = Path.Combine(pathFolder, nameFolderNotes, $"{id}.txt");
+                    
+                    if (!File.Exists(notePath))
+                    {
+                        MessageBox.Show("Заметка не найдена");
+                        break;
+                    }
+                    
+                    // Открываем блокнот с файлом заметки
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "notepad.exe",
+                        Arguments = $"\"{notePath}\"",
+                        UseShellExecute = true
+                    });
+                    
                     break;
                 }
         }
