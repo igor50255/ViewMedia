@@ -692,6 +692,85 @@ public partial class MainWindow : Window
                     }
                     break;
                 }
+            case "save-video-plus":
+                {
+                    // Сохраняет видео и/или файл заметки в папку Загрузки
+                    var src = root.GetProperty("src").GetString() ?? "";
+                    var id = root.GetProperty("id").GetString() ?? "";
+                    
+                    var pathFolder = src.Split("preview")[0].Replace("https://" + hostGallery, rootContent).Replace('/', '\\');
+                    var pathFolderVideo = Path.Combine(pathFolder, nameFolderVideo);
+                    var pathJson = Path.Combine(pathFolder, nameConnectionFileJson);
+
+                    try
+                    {
+                        string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                        bool videoSaved = false;
+                        bool noteSaved = false;
+                        string videoName = "";
+                        
+                        // Пытаемся найти и сохранить видео
+                        if (File.Exists(pathJson))
+                        {
+                            var jsonContent = File.ReadAllText(pathJson);
+                            var connections = JsonSerializer.Deserialize<List<DataConnection>>(jsonContent) ?? [];
+                            int index = connections.FindIndex(c => c.VideoId == id);
+                            
+                            if (index != -1)
+                            {
+                                videoName = connections[index].VideoName;
+                                if (!string.IsNullOrEmpty(videoName))
+                                {
+                                    string sourceVideoPath = Path.Combine(pathFolderVideo, videoName);
+                                    if (File.Exists(sourceVideoPath))
+                                    {
+                                        string destVideoPath = Path.Combine(downloadsPath, videoName);
+                                        File.Copy(sourceVideoPath, destVideoPath, true);
+                                        File.SetLastWriteTime(destVideoPath, DateTime.Now);
+                                        videoSaved = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Копируем файл заметки из папки notes, если существует
+                        string sourceNotePath = Path.Combine(pathFolder, nameFolderNotes, $"{id}.txt");
+                        if (File.Exists(sourceNotePath))
+                        {
+                            string destNotePath = Path.Combine(downloadsPath, $"{id}.txt");
+                            File.Copy(sourceNotePath, destNotePath, true);
+                            File.SetLastWriteTime(destNotePath, DateTime.Now);
+                            noteSaved = true;
+                        }
+                        
+                        // Формируем сообщение о результате
+                        if (videoSaved && noteSaved)
+                        {
+                            Log.Information($"Видео и заметка сохранены в Загрузки: {videoName}, {id}.txt");
+                            MessageBox.Show($"Видео и заметка сохранены в папку Загрузки:\n{videoName}\n{id}.txt");
+                        }
+                        else if (videoSaved)
+                        {
+                            Log.Information($"Видео сохранено в Загрузки: {videoName}");
+                            MessageBox.Show($"Видео сохранено в папку Загрузки:\n{videoName}");
+                        }
+                        else if (noteSaved)
+                        {
+                            Log.Information($"Заметка сохранена в Загрузки: {id}.txt");
+                            MessageBox.Show($"Заметка сохранена в папку Загрузки:\n{id}.txt");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ни видео, ни заметка не найдены");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning($"Ошибка сохранения видео+: {ex.Message}");
+                        MessageBox.Show($"Ошибка сохранения видео+: {ex.Message}");
+                    }
+                    break;
+                }
             case "third-click": // открыть заметку в блокноте
                 {
                     var id = root.GetProperty("id").GetString() ?? "";

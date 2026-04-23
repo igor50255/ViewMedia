@@ -65,6 +65,12 @@ contextPreviewMenu.addEventListener("click", function (e) {
     chrome.webview.postMessage(saveVideoData);
   }
 
+  if (action === "save-video-plus") {
+    console.log("Сохранить видео +!");
+    const saveVideoPlusData = { type: 'save-video-plus', src: currentContextCard.dataset.src, id: currentContextCard.dataset.id};
+    chrome.webview.postMessage(saveVideoPlusData);
+  }
+
   // Закрытие меню
   contextPreviewMenu.classList.remove("active");
 });
