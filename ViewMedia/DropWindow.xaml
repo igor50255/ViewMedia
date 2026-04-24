@@ -11,22 +11,23 @@
         WindowStartupLocation="CenterOwner">
 
     <Border Background="White" CornerRadius="8"
-            BorderBrush="#cccccc" BorderThickness="1">
+            BorderBrush="#00838f" BorderThickness="2">
         <StackPanel>
 
             <!-- Заголовок — тащим за него -->
             <Border x:Name="PanelHeader"
-                    Background="#e8e8e8"
-                    CornerRadius="8 8 0 0"
+                    Background="#00838f"
+                    CornerRadius="5 5 0 0"
                     Padding="12 8"
                     Cursor="SizeAll"
                     MouseDown="PanelHeader_MouseDown">
                 <Grid>
-                    <TextBlock Text="Загрузить файл" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Загрузить файл" FontWeight="Bold" VerticalAlignment="Center" Foreground="White"/>
                     <Button x:Name="BtnClose" Content="✕"
                             HorizontalAlignment="Right"
                             Width="24" Height="24"
                             Background="Transparent" BorderThickness="0"
+                            Foreground="White"
                             Cursor="Hand"
                             Click="BtnClose_Click"/>
                 </Grid>
@@ -37,7 +38,7 @@
                     Margin="12" Padding="0"
                     Height="100"
                     Background="Transparent"
-                    BorderBrush="#aaaaaa" BorderThickness="2"
+                    BorderBrush="#00838f" BorderThickness="1"
                     CornerRadius="6"
                     AllowDrop="True"
                     Drop="DropZone_DropAsync"
