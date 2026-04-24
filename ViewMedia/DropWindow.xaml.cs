@@ -55,17 +55,20 @@ namespace ViewMedia
                 : DragDropEffects.None;
 
             DropZone.BorderBrush = Brushes.CornflowerBlue;
+            DropZone.Background = new SolidColorBrush(Color.FromRgb(0xf0, 0xf0, 0xf0));
             e.Handled = true;
         }
 
         private void DropZone_DragLeave(object sender, DragEventArgs e)
         {
-            DropZone.BorderBrush = new SolidColorBrush(Color.FromRgb(0xaa, 0xaa, 0xaa));
+            DropZone.BorderBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x83, 0x8f));
+            DropZone.Background = Brushes.Transparent;
         }
 
         private async void DropZone_DropAsync(object sender, DragEventArgs e)
         {
-            DropZone.BorderBrush = new SolidColorBrush(Color.FromRgb(0xaa, 0xaa, 0xaa));
+            DropZone.BorderBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x83, 0x8f));
+            DropZone.Background = Brushes.Transparent;
 
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files == null || files.Length == 0) return;
